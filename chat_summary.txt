@@ -1,0 +1,6 @@
+1. Discussed the development of Langchain agents.
+2. Created the basic structure for all the agents.
+3. Added tools for the agents to use.
+4. Started implementing the tools.
+5. Currently working on implementing the ChatGPT Plugins tool using the OpenAI API.
+6. Next steps include implementing the Google Search, YouTubeSearchTool, and Requests tools.
