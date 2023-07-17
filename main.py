@@ -10,7 +10,7 @@ load_dotenv()
 # Initialize OpenAI API with your key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-import memory.short_term.memory as mem
+from memory.short_term.memory import Memory
 
 class LangchainCLI(cmd.Cmd):
     prompt = 'You: '
