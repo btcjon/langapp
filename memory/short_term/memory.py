@@ -3,10 +3,10 @@ class Memory:
         self.data = []
         self.limit = limit
 
-    def store(self, message):
-        self.data.append(message)
+    def store(self, role, message):
+        self.data.append({"role": role, "content": message})
         if len(self.data) > self.limit:
             self.data.pop(0)
 
     def retrieve(self):
-        return self.data
+        return self.data[-self.limit:]
