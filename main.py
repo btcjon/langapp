@@ -17,7 +17,7 @@ class LangchainCLI(cmd.Cmd):
         self.llm_gpt4 = LLM("gpt-4")
         self.llm_gpt35turbo16k = LLM("gpt-3.5-turbo-16k")
         self.llm_gpt35turbo = LLM("gpt-3.5-turbo")
-        self.current_llm = self.llm_gpt4
+        self.current_llm = self.llm_gpt35turbo
 
     def do_greet(self, line):
         print("Hello, welcome to Langchain!")
@@ -34,6 +34,10 @@ class LangchainCLI(cmd.Cmd):
             self.current_llm = self.llm_gpt35turbo
         else:
             print("Invalid model name")
+
+    def do_chat(self, line):
+        response = self.current_llm.chat(line)
+        print(response)
 
 if __name__ == '__main__':
     LangchainCLI().cmdloop()
