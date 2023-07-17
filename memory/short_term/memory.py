@@ -1,9 +1,12 @@
 class Memory:
-    def __init__(self):
-        self.data = {}
+    def __init__(self, limit=10):
+        self.data = []
+        self.limit = limit
 
-    def store(self, key, value):
-        self.data[key] = value
+    def store(self, message):
+        self.data.append(message)
+        if len(self.data) > self.limit:
+            self.data.pop(0)
 
-    def retrieve(self, key):
-        return self.data.get(key)
+    def retrieve(self):
+        return self.data
