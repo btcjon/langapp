@@ -8,7 +8,7 @@ from chains.llm import LLM
 load_dotenv()
 
 # Initialize OpenAI API with your key
-openai.api_key = os.getenv("OPENAI_KEY")
+openai.api_key = "your_openai_api_key"
 
 class LangchainCLI(cmd.Cmd):
     prompt = 'langchain> '
