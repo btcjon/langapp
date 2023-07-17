@@ -4,3 +4,7 @@ class LLM:
 
     def execute(self):
         pass
+
+    def chat(self, line):
+        # Add your chat logic here
+        pass
