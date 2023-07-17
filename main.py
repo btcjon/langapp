@@ -45,8 +45,8 @@ class LangchainCLI(cmd.Cmd):
         else:
             print("Invalid model name")
 
-    def do_chat(self, line):
-        response = self.current_llm.chat(line)
+    def do_chat(self, args):
+        response = self.current_llm.chat(args)
         print(response)
 
     def default(self, line):
