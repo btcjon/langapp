@@ -6,13 +6,17 @@ def write_file(file_path, content):
     with open(file_path, 'w') as file:
         file.write(content)
 
+import openai
+
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
 def generate_text(prompt):
-    # Use the ChatGPT model to generate a text
-    pass
+    response = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=100)
+    return response.choices[0].text.strip()
 
 def answer_question(question):
-    # Use the ChatGPT model to answer a question
-    pass
+    response = openai.Completion.create(engine="text-davinci-002", prompt=question, max_tokens=100)
+    return response.choices[0].text.strip()
 
 def google_search(query):
     # Use a Google search API to perform the search
