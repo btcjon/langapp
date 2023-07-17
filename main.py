@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import openai
 import cmd
 from chains.llm import LLM
+import memory.short_term.memory as mem
 
 # Load environment variables from .env file
 load_dotenv()
