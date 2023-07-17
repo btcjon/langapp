@@ -36,7 +36,6 @@ class LangchainCLI(cmd.Cmd):
         response = self.current_llm.chat(self.memory.retrieve())
         self.memory.store("assistant", response)
         print(response)
-        self.do_greet(None)
 
     def do_greet(self, line):
         print("Hello, welcome to Langchain!")

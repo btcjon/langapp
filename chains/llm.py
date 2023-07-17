@@ -7,12 +7,10 @@ class LLM:
     def execute(self):
         pass
 
-    def chat(self, line):
+    def chat(self, messages):
+        messages.insert(0, {"role": "system", "content": "You are a helpful assistant."})
         response = openai.ChatCompletion.create(
           model=self.model_name,
-          messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": line}
-            ]
+          messages=messages
         )
         return response.choices[0].message['content']
