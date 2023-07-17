@@ -28,16 +28,31 @@ def ask_human(question):
 
 def get_feedback():
     # Get a feedback from a human
-    pass
+from googlesearch import search
+import requests
+from youtube_search import YoutubeSearch
+
+def google_search(query):
+    # Use a Google search API to perform the search
+    for j in search(query, num_results=10):
+        print(j)
 
 def youtube_search(query):
     # Use a YouTube search API to perform the search
-    pass
+    results = YoutubeSearch(query, max_results=10).to_dict()
+    for result in results:
+        print(result)
 
-def make_request(url, method, headers, data):
+def make_request(url, method, headers=None, data=None):
     # Make a HTTP request
-    pass
-
+    if method.lower() == 'get':
+        response = requests.get(url, headers=headers)
+    elif method.lower() == 'post':
+        response = requests.post(url, headers=headers, data=data)
+    else:
+        print("Invalid method")
+        return
+    return response.text
 tools = {
     'read_file': read_file,
     'write_file': write_file,
