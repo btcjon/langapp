@@ -49,5 +49,8 @@ class LangchainCLI(cmd.Cmd):
         response = self.current_llm.chat(line)
         print(response)
 
+    def default(self, line):
+        self.do_chat(line)
+
 if __name__ == '__main__':
     LangchainCLI().cmdloop()
