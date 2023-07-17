@@ -24,6 +24,7 @@ class LangchainCLI(cmd.Cmd):
         print("You can change the language model using the 'select_model' command.")
         print("You can start chatting with the language model using the 'chat' command.")
         print("Type 'help' for more information on commands.")
+        self.do_chat('')
 
     def preloop(self):
         self.do_greet(None)
