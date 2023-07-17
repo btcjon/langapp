@@ -11,8 +11,16 @@ class SupabaseMemory:
         self.key = os.getenv("SUPABASE_KEY")
         self.client: Client = create_client(self.url, self.key)
 
-    def store(self, table, data):
-        self.client.from_(table).insert(data)
+    def store(self, user_id, session_id, user_message, ai_response):
+        data = {
+            "user_id": user_id,
+            "session_id": session_id,
+            "timestamp": datetime.now(),
+            "user_message": user_message,
+            "ai_response": ai_response
+        }
+        self.client.from_("conversations").insert(data)
 
-    def retrieve(self, table, query):
-        return self.client.from_(table).select().match(query)
+    def retrieve(self, user_id, session_id):
+        query = {"user_id": user_id, "session_id": session_id}
+        return self.client.from_("conversations").select().match(query)
