@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import openai
 import cmd
+from chains.llm import LLM
 
 # Load environment variables from .env file
 load_dotenv()
