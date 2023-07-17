@@ -10,12 +10,13 @@ load_dotenv()
 # Initialize OpenAI API with your key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+import memory.short_term.memory as mem
+
 class LangchainCLI(cmd.Cmd):
     prompt = 'You: '
 
-    from memory.short_term.memory import Memory
-
     def __init__(self):
+        self.memory = mem.Memory()
         super().__init__()
         self.llm_gpt4 = LLM("gpt-4")
         self.llm_gpt35turbo16k = LLM("gpt-3.5-turbo-16k")
