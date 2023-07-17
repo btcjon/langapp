@@ -24,10 +24,15 @@ def google_search(query):
 
 def ask_human(question):
     # Ask a question to a human
-    pass
+    # Placeholder code
+    print("This function will ask the following question to a human: ", question)
+    return "Human response will be here"
 
 def get_feedback():
     # Get a feedback from a human
+    # Placeholder code
+    print("This function will get feedback from a human.")
+    return "Human feedback will be here"
 from googlesearch import search
 import requests
 from youtube_search import YoutubeSearch
