@@ -18,5 +18,5 @@ class LLM:
           model=self.model_name,
           messages=messages
         )
-        self.memory.store("ai", response.choices[0].message['content'])
+        self.memory.store("assistant", response.choices[0].message['content'])
         return response.choices[0].message['content']
