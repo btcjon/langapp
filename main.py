@@ -52,7 +52,10 @@ class LangchainCLI(cmd.Cmd):
             print("Invalid model name")
 
     def do_chat(self, args):
-        response = self.current_llm.chat([args])
+        if args:
+            response = self.current_llm.chat([{"role": "user", "content": args}])
+        else:
+            response = self.current_llm.chat([{"role": "system", "content": "You are a helpful assistant."}])
         print(response)
 
     def default(self, line):
