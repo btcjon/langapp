@@ -1,0 +1,293 @@
+gcp-starter environment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecuritygcp-starter environmentSuggest EditsOverview
+This document describes concepts related to the gcp-starter environment. To learn about indexes and other environments, see Understanding.
+The gcp-starter region is a unique Starter Plan region
+Users on the Starter Plan can choose to deploy their project on one of multiple environments. One option is the gcp-starter region.
+Unlike other Starter Plan regions, the gcp starter region has unique features and limitations.
+Features
+Like other Starter Plan environments, projects on the gcp-starter environment support one pod with enough resources to support approximately 100,000 vectors with 1536-dimensional embeddings and metadata; the capacity is proportional for other dimensions. Indexes on the gcp-starter environment do not specify pod types; create_index calls ignore the pod_type parameter.
+Unlike other Starter Plan environments, projects in the gcp-starter region have no retention limits; data is retained indefinitely. Indexes in these projects are not deleted after inactivity as in other environments.
+Limitations
+Like other Starter Plan environments, projects in the gcp-starter environment do not support replicas.
+After upserting records to indexes in gcp-starter, the query and describe_index_stats operations may not return updated records for up to 10 seconds. 
+The gcp-starter environment does not support the following features:
+
+Namespaces
+Collections
+Delete by metadata
+configure_index(). Because this environment only supports one index configuration, this operation is not supported.
+describe_index() with metadata filtering
+metadata_config parameter to create_index().
+delete() with the deleteAll parameter. This feature is dependent on namespaces.
+Metadata strings containing the character Δ. This is a reserved character in the underlying storage format.
+
+Developing on gcp-starter
+Because projects on the gcp-starter region do not support the above features, you may need to use different features when developing your project.
+Namespaces
+Because projects in the gcp-starter environment do not support namespaces, you may wish to use metadata filtering to support multitenancy in your project. Another alternative is to upgrade to the Standard or Enterprise plans and use multiple indexes to support multitenancy.
+Collections
+Projects in the gcp-starter environment do not support the collections feature. However, collections may not be necessary or appropriate for projects in the gcp-starter environment. Collections serve two primary purposes: decreasing usage by archiving inactive indexes, and experimenting with different index configurations. However, projects on the gcp-starter environment neither incur usage costs nor specify pod types or sizes.
+Delete by metadata
+Projects in the gcp-starter environment do not support deleting records by metadata. In some cases, you may be able to delete records by ID instead. This may require you to first query your index with metadata filters, then extract the record IDs.Updated 6 days ago Table of Contents
+
+Overview
+
+
+The gcp-starter region is a unique Starter Plan region
+
+
+Features
+
+
+Limitations
+
+
+Developing on gcp-starter
+
+Namespaces
+Collections
+Delete by metadata
+
+
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

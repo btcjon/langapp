@@ -1,0 +1,15 @@
+
+
+
+
+
+Discord | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersHow-toIntegrationsacreomAirbyte JSONAirtableAlibaba Cloud MaxComputeApify DatasetArxivAWS S3 DirectoryAWS S3 FileAZLyricsAzure Blob Storage ContainerAzure Blob Storage FileBibTeXBiliBiliBlackboardBlockchainBrave Searchchatgpt_loaderCollege ConfidentialConfluenceCoNLL-UCopy PasteCSVCube Semantic LayerDatadog LogsDiffbotDiscordDocugamiDuckDBEmailEmbaasEPubEverNoteexample_dataMicrosoft ExcelFacebook ChatFaunaFigmaGitGitBookGitHubGoogle BigQueryGoogle Cloud Storage DirectoryGoogle Cloud Storage FileGoogle DriveGrobidGutenbergHacker NewsHuggingFace datasetiFixitImagesImage captionsIMSDbIuguJoplinJupyter NotebookLarkSuite (FeiShu)MastodonMediaWikiDumpMergeDocLoadermhtmlMicrosoft OneDriveMicrosoft PowerPointMicrosoft WordModern TreasuryNotion DB 1/2Notion DB 2/2ObsidianOpen Document Format (ODT)Open City DataOrg-modePandas DataFramePsychicPySpark DataFrame LoaderReadTheDocs DocumentationRecursive URL LoaderRedditRoamRSTSitemapSlackSnowflakeSource CodeSpreedlyStripeSubtitleTelegramTencent COS DirectoryTencent COS File2MarkdownTOMLTrelloTSVTwitterUnstructured FileURLWeatherWebBaseLoaderWhatsApp ChatWikipediaXMLXorbits Pandas DataFrameLoading documents from a YouTube urlYouTube transcriptsDocument transformersText embedding modelsVector storesRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionDocument loadersIntegrationsDiscordDiscordDiscord is a VoIP and instant messaging social platform. Users have the ability to communicate with voice calls, video calls, text messaging, media and files in private chats or as part of communities called "servers". A server is a collection of persistent chat rooms and voice channels which can be accessed via invite links.Follow these steps to download your Discord data:Go to your User SettingsThen go to Privacy and SafetyHead over to the Request all of my Data and click on Request Data buttonIt might take 30 days for you to receive your data. You'll receive an email at the address which is registered with Discord. That email will have a download button using which you would be able to download your personal Discord data.import pandas as pdimport ospath = input('Please enter the path to the contents of the Discord "messages" folder: ')li = []for f in os.listdir(path):    expected_csv_path = os.path.join(path, f, "messages.csv")    csv_exists = os.path.isfile(expected_csv_path)    if csv_exists:        df = pd.read_csv(expected_csv_path, index_col=None, header=0)        li.append(df)df = pd.concat(li, axis=0, ignore_index=True, sort=False)from langchain.document_loaders.discord import DiscordChatLoaderloader = DiscordChatLoader(df, user_id_col="ID")print(loader.load())PreviousDiffbotNextDocugamiCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

@@ -1,0 +1,276 @@
+Understanding collections
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityUnderstanding collectionsSuggest EditsOverview
+This document explains the concepts related to collections in Pinecone.
+⚠️WarningThis is a public preview ("Beta") feature. Test thoroughly before
+using this feature for production workloads. No SLAs or technical support
+commitments are provided for this feature.
+A collection is a static copy of an index. It is a non-queryable representation of a set of vectors and metadata. You can create a collection from an index, and you can create a new index from a collection. This new index can differ from the original source index: the new index can have a different number of pods, a different pod type, or a different similarity metric.
+Indexes in the gcp-starter environment do not support collections.
+Use cases for collections
+Creating a collection from your index is useful when performing tasks like the following:
+
+Temporarily shutting down an index
+Copying the data from one index into a different index;
+Making a backup of your index
+Experimenting with different index configurations
+
+To learn about creating backups with collections, see Back up indexes.
+To learn about creating indexes from collections, see Manage indexes.
+Performance
+Collections operations perform differently with different pod types.
+
+Creating a collection from an index takes approximately 10 minutes. 
+Creating a p1 or s1 index from a collection takes approximately 10 minutes.
+Creating a p2 index from a collection can take several hours.
+
+Limitations
+You cannot query or write to a collection after its creation. For this reason, a collection only incurs storage costs.
+You can only perform operations on collections in the current Pinecone project.Updated 24 days ago Table of Contents
+Overview
+Use cases for collections
+Performance
+Limitations
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

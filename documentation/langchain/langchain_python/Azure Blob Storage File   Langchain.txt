@@ -1,0 +1,15 @@
+
+
+
+
+
+Azure Blob Storage File | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersHow-toIntegrationsacreomAirbyte JSONAirtableAlibaba Cloud MaxComputeApify DatasetArxivAWS S3 DirectoryAWS S3 FileAZLyricsAzure Blob Storage ContainerAzure Blob Storage FileBibTeXBiliBiliBlackboardBlockchainBrave Searchchatgpt_loaderCollege ConfidentialConfluenceCoNLL-UCopy PasteCSVCube Semantic LayerDatadog LogsDiffbotDiscordDocugamiDuckDBEmailEmbaasEPubEverNoteexample_dataMicrosoft ExcelFacebook ChatFaunaFigmaGitGitBookGitHubGoogle BigQueryGoogle Cloud Storage DirectoryGoogle Cloud Storage FileGoogle DriveGrobidGutenbergHacker NewsHuggingFace datasetiFixitImagesImage captionsIMSDbIuguJoplinJupyter NotebookLarkSuite (FeiShu)MastodonMediaWikiDumpMergeDocLoadermhtmlMicrosoft OneDriveMicrosoft PowerPointMicrosoft WordModern TreasuryNotion DB 1/2Notion DB 2/2ObsidianOpen Document Format (ODT)Open City DataOrg-modePandas DataFramePsychicPySpark DataFrame LoaderReadTheDocs DocumentationRecursive URL LoaderRedditRoamRSTSitemapSlackSnowflakeSource CodeSpreedlyStripeSubtitleTelegramTencent COS DirectoryTencent COS File2MarkdownTOMLTrelloTSVTwitterUnstructured FileURLWeatherWebBaseLoaderWhatsApp ChatWikipediaXMLXorbits Pandas DataFrameLoading documents from a YouTube urlYouTube transcriptsDocument transformersText embedding modelsVector storesRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionDocument loadersIntegrationsAzure Blob Storage FileAzure Blob Storage FileAzure Files offers fully managed file shares in the cloud that are accessible via the industry standard Server Message Block (SMB) protocol, Network File System (NFS) protocol, and Azure Files REST API.This covers how to load document objects from a Azure Files.#!pip install azure-storage-blobfrom langchain.document_loaders import AzureBlobStorageFileLoaderloader = AzureBlobStorageFileLoader(    conn_str="<connection string>",    container="<container name>",    blob_name="<blob name>",)loader.load()    [Document(page_content='Lorem ipsum dolor sit amet.', lookup_str='', metadata={'source': '/var/folders/y6/8_bzdg295ld6s1_97_12m4lr0000gn/T/tmpxvave6wl/fake.docx'}, lookup_index=0)]PreviousAzure Blob Storage ContainerNextBibTeXCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

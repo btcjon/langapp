@@ -1,0 +1,15 @@
+
+
+
+
+
+SingleStoreDB | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersDocument transformersText embedding modelsVector storesIntegrationsAlibaba Cloud OpenSearchAnalyticDBAnnoyAtlasAwaDBAzure Cognitive SearchCassandraChromaClarifaiClickHouse Vector SearchActiveloop's Deep LakeDocArrayHnswSearchDocArrayInMemorySearchElasticSearchFAISSHologresLanceDBMarqoMatchingEngineMilvusMongoDB AtlasMyScaleOpenSearchpg_hnswPGVectorPineconeQdrantRedisRocksetSingleStoreDBscikit-learnStarRocksSupabase (Postgres)TairTigrisTypesenseVectaraWeaviateZillizRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionVector storesIntegrationsSingleStoreDBSingleStoreDBSingleStoreDB is a high-performance distributed SQL database that supports deployment both in the cloud and on-premises. It provides vector storage, and vector functions including dot_product and euclidean_distance, thereby supporting AI applications that require text similarity matching. This tutorial illustrates how to work with vector data in SingleStoreDB.# Establishing a connection to the database is facilitated through the singlestoredb Python connector.# Please ensure that this connector is installed in your working environment.pip install singlestoredbimport osimport getpass# We want to use OpenAIEmbeddings so we have to get the OpenAI API Key.os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")from langchain.embeddings.openai import OpenAIEmbeddingsfrom langchain.text_splitter import CharacterTextSplitterfrom langchain.vectorstores import SingleStoreDBfrom langchain.document_loaders import TextLoader# Load text samplesloader = TextLoader("../../../state_of_the_union.txt")documents = loader.load()text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)docs = text_splitter.split_documents(documents)embeddings = OpenAIEmbeddings()There are several ways to establish a connection to the database. You can either set up environment variables or pass named parameters to the SingleStoreDB constructor. Alternatively, you may provide these parameters to the from_documents and from_texts methods.# Setup connection url as environment variableos.environ["SINGLESTOREDB_URL"] = "root:pass@localhost:3306/db"# Load documents to the storedocsearch = SingleStoreDB.from_documents(    docs,    embeddings,    table_name="notebook",  # use table with a custom name)query = "What did the president say about Ketanji Brown Jackson"docs = docsearch.similarity_search(query)  # Find documents that correspond to the queryprint(docs[0].page_content)PreviousRocksetNextscikit-learnCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

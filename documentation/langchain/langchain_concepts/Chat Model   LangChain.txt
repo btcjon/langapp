@@ -1,0 +1,15 @@
+
+
+
+
+
+Chat Model | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsLanguage ModelChat ModelText Embedding ModelPromptsIndexesMemoryChainsAgentsUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsModelsChat ModelChat ModelinfoPython GuideJS GuideA chat model takes a list of ChatMessages as an input and returns a ChatMessage.PreviousLanguage ModelNextText Embedding ModelCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

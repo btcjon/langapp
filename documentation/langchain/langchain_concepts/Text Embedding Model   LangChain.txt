@@ -1,0 +1,15 @@
+
+
+
+
+
+Text Embedding Model | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsLanguage ModelChat ModelText Embedding ModelPromptsIndexesMemoryChainsAgentsUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsModelsText Embedding ModelText Embedding ModelinfoPython GuideJS GuideA text embedding model takes a piece of text as input and numerical representation of that text in the form of a list of floats.PreviousChat ModelNextPromptsCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

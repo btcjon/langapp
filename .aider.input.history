@@ -1,0 +1,615 @@
+
+# 2023-07-17 10:49:26.415547
++I want to build a full langchain app with all features using openai api and other various services like supabase, pinecone and various  apis to give the all full use of tools, agents, memory, etc provided by the langchain framework
+
+# 2023-07-17 10:54:57.599545
++I want to treat these models as 3 LLM gpt-4,gpt-3.5-turbo-16k,gpt-3.5-turbo. I want chains, agents, document loaders. I want local short term memory,supabase for long term memory, pinecone for vector storage and get. Chat with system will happen in the cli
+
+# 2023-07-17 10:56:31.051230
++the current codebase is empty. we have not started the app. I would like to store all APIs etc in .env file.  I have added my opeanAI key there already.
+
+# 2023-07-17 10:58:46.449137
++proceed
+
+# 2023-07-17 11:00:23.644111
++I already made the files as suggested
+
+# 2023-07-17 11:03:59.071278
++I made the folders etc in my IDE, how do I fix permissions?
+
+# 2023-07-17 11:08:28.054904
++what command can I use in cli to make them all the right permissions
+
+# 2023-07-17 11:09:27.034936
++ok try now
+
+# 2023-07-17 11:09:46.568009
++proceed
+
+# 2023-07-17 11:10:21.853496
++continue
+
+# 2023-07-17 11:17:42.117183
++ok. I am not seeing the new API placeholders in my env file. supabase and pinecone missing.  can you add?
+
+# 2023-07-17 11:22:00.315585
++continue
+
+# 2023-07-17 11:37:26.585511
++Agents- Zero-shot ReAct, Plan-and-execute agents, ReAct document store, Self ask with search, Conversational, OpenAI Functions, Structured input ReAct Chains- llm, router, sequential, transformation, api chains, retrieval, summarization, conversational retrieval documents - txt,pdf,csv,zip(unpack), text scraped from web. Lets handle these first then Memory and vector storage.
+
+# 2023-07-17 11:38:06.968149
++continue
+
+# 2023-07-17 11:42:55.388018
++Zero-shot ReAct
++This agent uses the ReAct framework to determine which tool to use based solely on the tool's description. Any number of tools can be provided. This agent requires that a description is provided for each tool.
++
++Note: This is the most general purpose action agent. An LLMChain is a simple chain that adds some functionality around language models. It is used widely throughout LangChain, including in other chains and agents.
++
++An LLMChain consists of a PromptTemplate and a language model (either an LLM or chat model). It formats the prompt template using the input key values provided (and also memory key values, if available), passes the formatted string to LLM and returns the LLM output. TXTloader loads txt files I would think
+
+# 2023-07-17 11:44:04.718176
++gpt-3.5-turbo should be used.  continue
+
+# 2023-07-17 11:44:48.015339
++/clear
+
+# 2023-07-17 11:44:52.729732
++continue
+
+# 2023-07-17 11:45:55.924947
++please review full code and let's continue making our lanchain app
+
+# 2023-07-17 11:48:43.205871
++we need to finish adding all possible code around for langchain agents
+
+# 2023-07-17 11:50:12.703984
++we need to add and make sure all these agents are configured: 
++Structured input ReAct
++The structured tool chat agent is capable of using multi-input tools. Older agents are configured to specify an action input as a single string, but this agent can use a tools' argument schema to create a structured action input. This is useful for more complex tool usage, like precisely navigating around a browser.
++
++OpenAI Functions
++Certain OpenAI models (like gpt-3.5-turbo-0613 and gpt-4-0613) have been explicitly fine-tuned to detect when a function should to be called and respond with the inputs that should be passed to the function. The OpenAI Functions Agent is designed to work with these models.
++
++Conversational
++This agent is designed to be used in conversational settings. The prompt is designed to make the agent helpful and conversational. It uses the ReAct framework to decide which tool to use, and uses memory to remember the previous conversation interactions.
++
++Self ask with search
++This agent utilizes a single tool that should be named Intermediate Answer. This tool should be able to lookup factual answers to questions. This agent is equivalent to the original self ask with search paper, where a Google search API was provided as the tool.
++
++ReAct document store
++This agent uses the ReAct framework to interact with a docstore. Two tools must be provided: a Search tool and a Lookup tool (they must be named exactly as so). The Search tool should search for a document, while the Lookup tool should lookup a term in the most recently found document. This agent is equivalent to the original ReAct paper, specifically the Wikipedia example.
++
++Plan-and-execute agents
++Plan and execute agents accomplish an objective by first planning what to do, then executing the sub tasks. This idea is largely inspired by BabyAGI and then the "Plan-and-Solve" paper.
+
+# 2023-07-17 11:50:57.461069
++continue
+
+# 2023-07-17 11:56:58.082494
++perhaps we should add some of the tools we would like to start with? 
+
+# 2023-07-17 12:00:37.941972
++lets start by adding these tools- File System Tools,ChatGPT Plugins,Google Search,Human as a tool,YouTubeSearchTool,Requests
+
+# 2023-07-17 12:01:59.169199
++continue
+
+# 2023-07-17 12:07:32.461652
++/drop
+
+# 2023-07-17 12:07:45.187958
++continue
+
+# 2023-07-17 12:08:45.494446
++yes. let me know APIs and I will add to the .env file as directed.  continue
+
+# 2023-07-17 12:10:58.758177
++continue
+
+# 2023-07-17 12:13:00.971356
++/drop
+
+# 2023-07-17 12:14:37.440438
++can you make a file that you keep updated with a concise summary of chat history called chat_summary.txt and use as few words as possible to summarize
+
+# 2023-07-17 12:16:21.441222
++can you make a file that you keep updated with a concise summary of chat history called chat_summary.txt 
++and use as few words as possible to summarize but with a bit more detail on what is being worked on now?
+
+# 2023-07-17 12:17:13.176033
++ can you make a file that you keep updated with a concise summary of chat history called chat_summary.txt 
++ 
++and use as few words as possible to summarize but with a bit more detail on what is being worked on now and what is left to be done?
+
+# 2023-07-17 12:17:52.649257
++/clear
+
+# 2023-07-17 12:18:02.434497
++lets continue
+
+# 2023-07-17 12:19:05.729486
++chat_summary.txt shows our progress and what we are working on now. please read as your instruction to continue
+
+# 2023-07-17 12:19:46.201023
++tools/tools.py 
+
+# 2023-07-17 12:20:37.226454
++continue next steps
+
+# 2023-07-17 12:21:52.538566
++continue
+
+# 2023-07-17 12:24:03.368993
++leave some code as placeholder to add later
+
+# 2023-07-17 12:25:04.660968
++memory/short_term/memory.py
+
+# 2023-07-17 12:25:56.372752
++implement like this - Short-Term Memory (Buffer Window): This part of the memory will hold the last N messages in the ongoing conversation. It's typically implemented as a queue or list data structure that can efficiently add new messages and remove old ones when the limit (N) is reached. Short-term memory helps the model to remember and respond to immediate context in the conversation.
+
+# 2023-07-17 12:27:34.658742
++drop memory/short_term/memory.py tools/tools.py 
+
+# 2023-07-17 12:27:57.315685
++drop memory/short_term/memory.py
+
+# 2023-07-17 12:28:09.059283
++/drop memory/short_term/memory.py
+
+# 2023-07-17 12:28:17.989401
++/drop tools/tools.py 
+
+# 2023-07-17 12:28:41.496236
++memory/long_term/supabase_memory.py
+
+# 2023-07-17 12:29:09.626485
++implement like this - Long-Term Memory (Supabase Database): This will be a Supabase database that stores past conversations. Each record in the database will include a user ID, session ID, timestamp, user message, and AI response. This allows the retrieval of past interactions for a user or a particular session, which is useful for maintaining context across multiple sessions and providing a personalized user experience. The user can access historical data using the user_id and session_id. We will have functions to store and retrieve data from this database.
+
+# 2023-07-17 12:30:42.210219
++/drop memory/long_term/supabase_memory.py 
+
+# 2023-07-17 12:30:49.824777
++main.py
+
+# 2023-07-17 12:32:39.921908
++in our langchain framework, how do I specify gpt-4,gpt-3.5-turbo-16k,gpt-3.5-turbo as seperate LLMs and how does it choose which one to use?
+
+# 2023-07-17 12:33:30.562507
++I can verify that these models are available. let's implement this
+
+# 2023-07-17 12:35:57.573192
++can we set llm_gpt35turbo as the default. then I want to test basic chatting with each very basic to test. anything thing else we need to implement to be able to test?
+
+# 2023-07-17 12:37:14.920430
++how do I test?
+
+# 2023-07-17 12:38:12.680985
++/run python main.py
+
+# 2023-07-17 12:39:53.953677
++/run main.py
+
+# 2023-07-17 12:40:32.719604
++/run python main.py
+
+# 2023-07-17 12:43:43.999606
++how do I interact with app?
+
+# 2023-07-17 12:44:46.714259
++ok. can we make the behavior to be ready for user prompt and default the llm to llm_gpt35turbo?
+
+# 2023-07-17 12:45:27.995231
++/run python main.py
+
+# 2023-07-17 12:46:59.125782
++ok I get this "Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++Hello, welcome to Langchain!
++langchain> " but I want to start directly in the "chat" like you would be after doing the chat command
+
+# 2023-07-17 12:48:28.604266
++got this error '(base) jonbennett@Jons-MBP langapp % python main.py
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 53, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 27, in __init__
++    self.do_chat('')
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 49, in do_chat
++    response = self.current_llm.chat(line)
++AttributeError: 'LLM' object has no attribute 'chat''
+
+# 2023-07-17 12:49:16.118291
++lets add the most typical chat logic to begin with
+
+# 2023-07-17 12:50:02.533498
++ok. is anything else we need to do to be able to chat with the llm now?
+
+# 2023-07-17 12:51:13.553226
++I get this '(base) jonbennett@Jons-MBP langapp % python main.py
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 53, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 27, in __init__
++    self.do_chat('')
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 49, in do_chat
++    response = self.current_llm.chat(line)
++  File "/Users/jonbennett/Dropbox/Coding/langapp/chains/llm.py", line 11, in chat
++    response = openai.ChatCompletion.create(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_resources/chat_completion.py", line 25, in create
++    return super().create(*args, **kwargs)
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_resources/abstract/engine_api_resource.py", line 149, in create
++    ) = cls.__prepare_create_request(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_resources/abstract/engine_api_resource.py", line 106, in __prepare_create_request
++    requestor = api_requestor.APIRequestor(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_requestor.py", line 134, in __init__
++    self.api_key = key or util.default_api_key()
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/util.py", line 186, in default_api_key
++    raise openai.error.AuthenticationError(
++openai.error.AuthenticationError: No API key provided. You can set your API key in code using 'openai.api_key = <API-KEY>', or you can set the environment variable OPENAI_API_KEY=<API-KEY>). If your API key is stored in a file, you can point the openai module at it with 'openai.api_key_path = <PATH>'. You can generate API keys in the OpenAI web interface. See https://platform.openai.com/account/api-keys for details.'
+
+# 2023-07-17 12:52:54.747031
++/run python main.py
+
+# 2023-07-17 12:54:42.406017
++I am still getting this after running python main.py "(base) jonbennett@Jons-MBP langapp % python main.py
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++How can I help you today?
++Hello, welcome to Langchain!
++langchain> tell me about pug dogs
++*** Unknown syntax: tell me about pug dogs" as you can see, I expected to be chatting but Im not sure what is happening
+
+# 2023-07-17 16:51:23.329381
++I tried this...  1. I was not put into a chat immediately like expected 2. I got no response '(base) jonbennett@Jons-MBP langapp % python main.py
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++How can I help you today?
++Hello, welcome to Langchain!
++langchain> chat
++How can I assist you today?
++langchain> tell me about pug dogs'
+
+# 2023-07-17 16:51:54.603735
++/run python main.py
+
+# 2023-07-17 16:54:57.387278
++ok. let's make the prompt say "You:" instead of langchain> Can we implement short term memory?  memory/short_term/memory.py ? I got this response '(base) jonbennett@Jons-MBP langapp % python main.py
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++How can I help you today?
++Hello, welcome to Langchain!
++langchain> tell me about pug dogs
++Pugs are a small breed of dog that is known for its distinctive wrinkled face and curly tail. They have a compact and muscular body with a square-shaped build. Pugs have a smooth, short coat and a wide range of coat colors, including fawn, black, silver, and apricot.
++
++Pugs are known to be friendly and sociable dogs, often described as being "clowns" due to their playful and mischievous nature. They have a lively and outgoing personality, making them great companions for families, single individuals, and seniors alike. Pugs are generally good with children and get along well with other pets.
++
++One of the most recognizable features of pugs is their flat, wrinkled face. However, this can sometimes result in certain health issues, such as breathing difficulties and eye problems. Pugs require regular exercise to maintain a healthy weight and avoid obesity, as they have a tendency to overeat.
++
++Despite their small size, pugs are known to be quite sturdy and adaptable. They can do well in different living environments, including apartments, as long as they are provided with daily exercise and mental stimulation. Pugs are not known for being excessive barkers, making them suitable for apartment living.
++
++Pugs are not high-maintenance dogs when it comes to grooming. Their short coat only requires occasional brushing to keep it clean and remove loose hair. However, it's important to regularly clean their wrinkled face to prevent any skin fold infections. Additionally, their nails should be trimmed regularly and their teeth should be brushed to maintain good oral hygiene.
++
++Overall, pugs are lovable, affectionate, and loyal companions that can bring joy and laughter to any household.' 
+
+# 2023-07-17 16:56:39.445605
++ok. how do we test it?
+
+# 2023-07-17 16:57:35.811997
++got this '(base) jonbennett@Jons-MBP langapp % python main.py
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 63, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 24, in __init__
++    self.memory = Memory()
++NameError: name 'Memory' is not defined
+
+# 2023-07-17 16:58:29.061992
++error '(base) jonbennett@Jons-MBP langapp % python main.py
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 64, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 25, in __init__
++    self.memory = Memory()
++NameError: name 'Memory' is not defined
+
+# 2023-07-17 19:49:01.989018
++as you can see, memory does not seem to be working 'Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++How can I assist you today?
++You: my name is jon
++Nice to meet you, Jon! How can I assist you today?
++You: tell me a quick explanation of ocean tides
++Ocean tides are the rise and fall of sea levels caused by the gravitational pull of the moon and, to a less
++er extent, the sun. As the moon orbits the Earth, it creates a gravitational force that causes water to bulge towards it, creating a high tide. At the same time, there is another high tide on the opposite side of the Earth due to the centrifugal force caused by the Earth's rotation. Between these two high tides, there are low tides. The gravitational pull of the sun also affects tides, though to a lesser extent. The timing and height of tides are influenced by various factors such as the gravitational pull, the shape of the coastline, and the depth of the ocean.                                                                          You: what is my name?
++I'm sorry, but I don't have access to personal information about individuals unless it has been shared with
++ me in the course of our conversation. I am designed to prioritize user privacy and data security. My primary function is to provide helpful information and assistance to the best of my knowledge and abilities.    You: Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 65, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/miniconda3/lib/python3.10/cmd.py", line 126, in cmdloop
++    line = input(self.prompt)
++KeyboardInterrupt
++
++'
+
+# 2023-07-17 19:56:04.832789
++/help
+
+# 2023-07-17 19:56:51.922200
++/run main.py
+
+# 2023-07-17 19:59:09.905779
++it is still not remembering my  name after I send another prompt.  it is not remembering
+
+# 2023-07-17 20:15:41.562002
++'Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 64, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 32, in __init__
++    self.do_chat('')
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 57, in do_chat
++    response = self.current_llm.chat(args)
++  File "/Users/jonbennett/Dropbox/Coding/langapp/chains/llm.py", line 11, in chat
++    messages.insert(0, {"role": "system", "content": "You are a helpful assistant."})
++AttributeError: 'str' object has no attribute 'insert'
++
+
+# 2023-07-17 20:21:14.562393
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 62, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 32, in __init__
++    self.do_chat('')
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 55, in do_chat
++    response = self.current_llm.chat([args])
++  File "/Users/jonbennett/Dropbox/Coding/langapp/chains/llm.py", line 12, in chat
++    response = openai.ChatCompletion.create(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_resources/chat_completion.py",
++ line 25, in create                                                                                            return super().create(*args, **kwargs)
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_resources/abstract/engine_api_
++resource.py", line 153, in create                                                                              response, _, api_key = requestor.request(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_requestor.py", line 230, in re
++quest                                                                                                          resp, got_stream = self._interpret_response(result, stream)
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_requestor.py", line 624, in _i
++nterpret_response                                                                                              self._interpret_response_line(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_requestor.py", line 687, in _i
++nterpret_response_line                                                                                         raise self.handle_error_response(
++openai.error.InvalidRequestError: '' is not of type 'object' - 'messages.1'
++
+
+# 2023-07-17 20:44:06.127622
++i have some docs that may be helpful '---
++created: 2023-07-17T20:43:23 (UTC -04:00)
++tags: []
++source: https://python.langchain.com/docs/modules/memory/how_to/buffer
++author: 
++---
++
++# How to add Memory to an LLMChain | 🦜️🔗 Langchain
++
++> ## Excerpt
++> This notebook goes over how to use the Memory class with an LLMChain. For the purposes of this walkthrough, we will add  the ConversationBufferMemory class, although this can be any memory class.
++
++---
++This notebook goes over how to use the Memory class with an LLMChain. For the purposes of this walkthrough, we will add the `ConversationBufferMemory` class, although this can be any memory class.
++
++```
++from langchain.memory import ConversationBufferMemoryfrom langchain import OpenAI, LLMChain, PromptTemplate
++```
++
++The most important step is setting up the prompt correctly. In the below prompt, we have two input keys: one for the actual input, another for the input from the Memory class. Importantly, we make sure the keys in the PromptTemplate and the ConversationBufferMemory match up (`chat_history`).
++
++```
++template = """You are a chatbot having a conversation with a human.{chat_history}Human: {human_input}Chatbot:"""prompt = PromptTemplate(    input_variables=["chat_history", "human_input"], template=template)memory = ConversationBufferMemory(memory_key="chat_history")
++```
++
++```
++llm_chain = LLMChain(    llm=OpenAI(),    prompt=prompt,    verbose=True,    memory=memory,)
++```
++
++```
++llm_chain.predict(human_input="Hi there my friend")
++```
++
++```
++            > Entering new LLMChain chain...    Prompt after formatting:    You are a chatbot having a conversation with a human.            Human: Hi there my friend    Chatbot:        > Finished LLMChain chain.    ' Hi there, how are you doing today?'
++```
++
++```
++llm_chain.predict(human_input="Not too bad - how are you?")
++```
++
++```
++            > Entering new LLMChain chain...    Prompt after formatting:    You are a chatbot having a conversation with a human.            Human: Hi there my friend    AI:  Hi there, how are you doing today?    Human: Not too bad - how are you?    Chatbot:        > Finished LLMChain chain.    " I'm doing great, thank you for asking!"
++```
++
+
+# 2023-07-17 20:45:31.470812
++this is jsut fyi, we dont have to change code.  please review '---
++created: 2023-07-17T20:45:22 (UTC -04:00)
++tags: []
++source: https://python.langchain.com/docs/modules/memory/how_to/buffer
++author: 
++---
++
++# Conversation buffer window memory | 🦜️🔗 Langchain
++
++> ## Excerpt
++> ConversationBufferWindowMemory keeps a list of the interactions of the conversation over time. It only uses the last K interactions. This can be useful for keeping a sliding window of the most recent interactions, so the buffer does not get too large
++
++---
++`ConversationBufferWindowMemory` keeps a list of the interactions of the conversation over time. It only uses the last K interactions. This can be useful for keeping a sliding window of the most recent interactions, so the buffer does not get too large
++
++Let's first explore the basic functionality of this type of memory.
++
++```
++from langchain.memory import ConversationBufferWindowMemory
++```
++
++```
++memory = ConversationBufferWindowMemory( k=1)memory.save_context({"input": "hi"}, {"output": "whats up"})memory.save_context({"input": "not much you"}, {"output": "not much"})
++```
++
++```
++memory.load_memory_variables({})
++```
++
++```
++    {'history': 'Human: not much you\nAI: not much'}
++```
++
++We can also get the history as a list of messages (this is useful if you are using this with a chat model).
++
++```
++memory = ConversationBufferWindowMemory( k=1, return_messages=True)memory.save_context({"input": "hi"}, {"output": "whats up"})memory.save_context({"input": "not much you"}, {"output": "not much"})
++```
++
++```
++memory.load_memory_variables({})
++```
++
++```
++    {'history': [HumanMessage(content='not much you', additional_kwargs={}),      AIMessage(content='not much', additional_kwargs={})]}
++```
++
++## Using in a chain[](https://python.langchain.com/docs/modules/memory/how_to/buffer#using-in-a-chain "Direct link to Using in a chain")
++
++Let's walk through an example, again setting `verbose=True` so we can see the prompt.
++
++```
++from langchain.llms import OpenAIfrom langchain.chains import ConversationChainconversation_with_summary = ConversationChain(    llm=OpenAI(temperature=0),     # We set a low k=2, to only keep the last 2 interactions in memory    memory=ConversationBufferWindowMemory(k=2),     verbose=True)conversation_with_summary.predict(input="Hi, what's up?")
++```
++
++```
++            > Entering new ConversationChain chain...    Prompt after formatting:    The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.        Current conversation:        Human: Hi, what's up?    AI:        > Finished chain.    " Hi there! I'm doing great. I'm currently helping a customer with a technical issue. How about you?"
++```
++
++```
++conversation_with_summary.predict(input="What's their issues?")
++```
++
++```
++            > Entering new ConversationChain chain...    Prompt after formatting:    The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.        Current conversation:    Human: Hi, what's up?    AI:  Hi there! I'm doing great. I'm currently helping a customer with a technical issue. How about you?    Human: What's their issues?    AI:        > Finished chain.    " The customer is having trouble connecting to their Wi-Fi network. I'm helping them troubleshoot the issue and get them connected."
++```
++
++```
++conversation_with_summary.predict(input="Is it going well?")
++```
++
++```
++            > Entering new ConversationChain chain...    Prompt after formatting:    The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.        Current conversation:    Human: Hi, what's up?    AI:  Hi there! I'm doing great. I'm currently helping a customer with a technical issue. How about you?    Human: What's their issues?    AI:  The customer is having trouble connecting to their Wi-Fi network. I'm helping them troubleshoot the issue and get them connected.    Human: Is it going well?    AI:        > Finished chain.    " Yes, it's going well so far. We've already identified the problem and are now working on a solution."
++```
++
++```
++# Notice here that the first interaction does not appear.conversation_with_summary.predict(input="What's the solution?")
++```
++
++```
++            > Entering new ConversationChain chain...    Prompt after formatting:    The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.        Current conversation:    Human: What's their issues?    AI:  The customer is having trouble connecting to their Wi-Fi network. I'm helping them troubleshoot the issue and get them connected.    Human: Is it going well?    AI:  Yes, it's going well so far. We've already identified the problem and are now working on a solution.    Human: What's the solution?    AI:        > Finished chain.    " The solution is to reset the router and reconfigure the settings. We're currently in the process of doing that."
++```
++
+
+# 2023-07-17 20:47:16.463938
++what is the current plan for our short-term memory? is there any info I need to provide to implement correctly?
+
+# 2023-07-17 20:48:19.344578
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 65, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 32, in __init__
++    self.do_chat('')
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 58, in do_chat
++    response = self.current_llm.chat([{"role": "system", "content": "You are a helpful assistant."}])
++  File "/Users/jonbennett/Dropbox/Coding/langapp/chains/llm.py", line 11, in chat
++    self.memory.store(messages[0]["role"], messages[0]["content"])
++AttributeError: 'LLM' object has no attribute 'memory'
++
+
+# 2023-07-17 20:48:59.242672
++is anything else needed to complete our short-term memory to be working?
+
+# 2023-07-17 20:50:53.385033
++Hello, welcome to Langchain!
++The default language model is gpt-3.5-turbo.
++You can change the language model using the 'select_model' command.
++You can start chatting with the language model using the 'chat' command.
++Type 'help' for more information on commands.
++How may I assist you today?
++You: my name is john
++Traceback (most recent call last):
++  File "/Users/jonbennett/miniconda3/lib/python3.10/cmd.py", line 214, in onecmd
++    func = getattr(self, 'do_' + cmd)
++AttributeError: 'LangchainCLI' object has no attribute 'do_my'
++
++During handling of the above exception, another exception occurred:
++
++Traceback (most recent call last):
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 65, in <module>
++    LangchainCLI().cmdloop()
++  File "/Users/jonbennett/miniconda3/lib/python3.10/cmd.py", line 138, in cmdloop
++    stop = self.onecmd(line)
++  File "/Users/jonbennett/miniconda3/lib/python3.10/cmd.py", line 216, in onecmd
++    return self.default(line)
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 62, in default
++    self.do_chat(line)
++  File "/Users/jonbennett/Dropbox/Coding/langapp/main.py", line 56, in do_chat
++    response = self.current_llm.chat([{"role": "user", "content": args}])
++  File "/Users/jonbennett/Dropbox/Coding/langapp/chains/llm.py", line 17, in chat
++    response = openai.ChatCompletion.create(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_resources/chat_completion.py",
++ line 25, in create                                                                                            return super().create(*args, **kwargs)
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_resources/abstract/engine_api_
++resource.py", line 153, in create                                                                              response, _, api_key = requestor.request(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_requestor.py", line 230, in re
++quest                                                                                                          resp, got_stream = self._interpret_response(result, stream)
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_requestor.py", line 624, in _i
++nterpret_response                                                                                              self._interpret_response_line(
++  File "/Users/jonbennett/miniconda3/lib/python3.10/site-packages/openai/api_requestor.py", line 687, in _i
++nterpret_response_line                                                                                         raise self.handle_error_response(
++openai.error.InvalidRequestError: 'ai' is not one of ['system', 'assistant', 'user', 'function'] - 'message
++s.2.role'                                                                                                  
+
+# 2023-07-17 20:51:42.381187
++can I run 'python main.py' here or do I need to exit?

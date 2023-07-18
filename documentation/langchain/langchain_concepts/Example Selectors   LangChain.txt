@@ -1,0 +1,15 @@
+
+
+
+
+
+Example Selectors | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsPromptsPrompt ValuePrompt TemplateExample SelectorsOutput ParserIndexesMemoryChainsAgentsUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsPromptsExample SelectorsExample SelectorsinfoPython GuideJS GuideOften times it is useful to include in the prompt examples in a prompt. These examples can be hardcoded, but it is often more powerful if they are dynamically selected. ExampleSelectors are objects that take in user input and then return a list of examples to use.PreviousPrompt TemplateNextOutput ParserCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

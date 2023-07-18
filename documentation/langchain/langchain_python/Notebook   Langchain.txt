@@ -1,0 +1,15 @@
+
+
+
+
+
+Notebook | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersHow-toIntegrationsacreomAirbyte JSONAirtableAlibaba Cloud MaxComputeApify DatasetArxivAWS S3 DirectoryAWS S3 FileAZLyricsAzure Blob Storage ContainerAzure Blob Storage FileBibTeXBiliBiliBlackboardBlockchainBrave Searchchatgpt_loaderCollege ConfidentialConfluenceCoNLL-UCopy PasteCSVCube Semantic LayerDatadog LogsDiffbotDiscordDocugamiDuckDBEmailEmbaasEPubEverNoteexample_dataNotebookMicrosoft ExcelFacebook ChatFaunaFigmaGitGitBookGitHubGoogle BigQueryGoogle Cloud Storage DirectoryGoogle Cloud Storage FileGoogle DriveGrobidGutenbergHacker NewsHuggingFace datasetiFixitImagesImage captionsIMSDbIuguJoplinJupyter NotebookLarkSuite (FeiShu)MastodonMediaWikiDumpMergeDocLoadermhtmlMicrosoft OneDriveMicrosoft PowerPointMicrosoft WordModern TreasuryNotion DB 1/2Notion DB 2/2ObsidianOpen Document Format (ODT)Open City DataOrg-modePandas DataFramePsychicPySpark DataFrame LoaderReadTheDocs DocumentationRecursive URL LoaderRedditRoamRSTSitemapSlackSnowflakeSource CodeSpreedlyStripeSubtitleTelegramTencent COS DirectoryTencent COS File2MarkdownTOMLTrelloTSVTwitterUnstructured FileURLWeatherWebBaseLoaderWhatsApp ChatWikipediaXMLXorbits Pandas DataFrameLoading documents from a YouTube urlYouTube transcriptsDocument transformersText embedding modelsVector storesRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionDocument loadersIntegrationsexample_dataNotebookNotebookThis notebook covers how to load data from an .ipynb notebook into a format suitable by LangChain.from langchain.document_loaders import NotebookLoaderloader = NotebookLoader("example_data/notebook.ipynb")NotebookLoader.load() loads the .ipynb notebook file into a Document object.Parameters:include_outputs (bool): whether to include cell outputs in the resulting document (default is False).max_output_length (int): the maximum number of characters to include from each cell output (default is 10).remove_newline (bool): whether to remove newline characters from the cell sources and outputs (default is False).traceback (bool): whether to include full traceback (default is False).loader.load(include_outputs=True, max_output_length=20, remove_newline=True)PreviousEverNoteNextMicrosoft ExcelCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

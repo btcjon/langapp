@@ -1,0 +1,22 @@
+
+
+
+
+
+Indexes | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsPromptsIndexesDocument LoadersText SplittersRetrieverVectorstoreMemoryChainsAgentsUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsIndexesOn this pageIndexesinfoPython GuideJS GuideIndexes refer to ways to structure documents so that LLMs can best interact with them.
+This module contains utility functions for working with documents, different types of indexes, and then examples for using those indexes in chains.The most common way that indexes are used in chains is in a "retrieval" step.
+This step refers to taking a user's query and returning the most relevant documents.
+We draw this distinction because (1) an index can be used for other things besides retrieval, and (2) retrieval can use other logic besides an index to find relevant documents.
+We therefor have a concept of a "Retriever" interface - this is the interface that most chains work with.Most of the time when we talk about indexes and retrieval we are talking about indexing and retrieving unstructured data (like text documents).
+For interacting with structured data (SQL tables, etc) or APIs, please see the corresponding use case sections for links to relevant functionality.
+The primary index and retrieval types supported by LangChain are currently centered around vector databases, and therefore
+a lot of the functionality we dive deep on those topics.Document LoadersClasses responsible for loading documents from various sources.Text SplittersClasses responsible for splitting text into smaller chunks.VectorStoresThe most common type of index. One that relies on embeddings.RetrieversInterface for fetching relevant documents to combine with language models.Go deeper​📄️ Document LoadersPython Guide📄️ Text SplittersPython Guide📄️ RetrieverPython Guide📄️ VectorstorePython GuidePreviousOutput ParserNextDocument LoadersGo deeperCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

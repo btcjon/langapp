@@ -1,0 +1,17 @@
+
+
+
+
+
+Chatbots | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsMemoryAgentsCallbacksModulesUse casesAgent simulationsAgentsInteracting with APIsAutonomous (long-running) agentsChatbotsVoice AssistantCode UnderstandingExtractionMulti-modalQA and Chat over DocumentsSummarizationAnalyzing structured dataGuidesEcosystemAdditional resourcesAPI referenceUse casesChatbotsChatbotsSince language models are good at producing text, that makes them ideal for creating chatbots.
+Aside from the base prompts/LLMs, an important concept to know for Chatbots is memory.
+Most chat based applications rely on remembering what happened in previous interactions, which memory is designed to help with.The following resources exist:ChatGPT Clone: A notebook walking through how to recreate a ChatGPT-like experience with LangChain.Conversation Agent: A notebook walking through how to create an agent optimized for conversation.Additional related resources include:Memory concepts and examples: Explanation of key concepts related to memory along with how-to's and examples.More end-to-end examples include:Voice Assistant: A notebook walking through how to create a voice assistant using LangChain.PreviousMeta-PromptNextVoice AssistantCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

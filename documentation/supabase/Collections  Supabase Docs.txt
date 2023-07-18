@@ -1,0 +1,11 @@
+Collections | Supabase DocsDOCSHomeGetting StartedDatabaseServerless APIsAuthEdge FunctionsRealtimeStorageAI & VectorsPlatformResourcesSelf-HostingIntegrationsClient Library ReferenceJavaScriptFlutterPythonCommunityC#CommunitySwiftCommunityKotlinCommunityTools referenceManagement APISupabase CLIStatusDOCSSearch docs...KSupabase.comDashboardHomeCollectionsA collection is an group of vector records.
+Records can be added to or updated in a collection.
+Collections can be queried at any time, but should be indexed for scalable query performance.
+Each vector record has the form:
+_10Record (_10    id: String_10    vec: Numeric[]_10    metadata: JSON_10)
+For example:
+_10("vec1", [0.1, 0.2, 0.3], {"year": 1990})
+Underneath every vecs a collection is Postgres table
+_10create table <collection_name> (_10    id string primary key,_10    vec vector(<dimension>),_10    metadata jsonb_10)
+where rows in the table map 1:1 with vecs vector records.
+It is safe to select collection tables from outside the vecs client but issuing DDL is not recommended.Edit this page on GitHub Need some help?Contact supportLastest product updates?See ChangelogSomething's not right?Check system status© Supabase Inc—ContributingAuthor StyleguideOpen SourceSupaSquad

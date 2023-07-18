@@ -1,0 +1,19 @@
+
+
+
+
+
+Airtable | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemIntegrationsWandB TracingAI21 LabsAimAirbyteAirtableAleph AlphaAlibaba Cloud OpensearchAmazon API GatewayAnalyticDBAnnoyAnyscaleApifyArgillaArthurArxivAtlasDBAwaDBAWS S3 DirectoryAZLyricsAzure Blob StorageAzure Cognitive SearchAzure OpenAIBananaBasetenBeamBedrockBiliBiliBlackboardBrave SearchCassandraCerebriumAIChaindeskChromaClarifaiClearMLCnosDBCohereCollege ConfidentialCometConfluenceC TransformersDatabricksDatadog LogsDataForSEODeepInfraDeep LakeDiffbotDiscordDocugamiDuckDBElasticsearchEverNoteFacebook ChatFigmaFlyteForefrontAIGitGitBookGoogle BigQueryGoogle Cloud StorageGoogle DriveGoogle SearchGoogle SerperGooseAIGPT4AllGraphsignalGrobidGutenbergHacker NewsHazy ResearchHeliconeHologresHugging FaceiFixitIMSDbInfinoJinaLanceDBLangChain Decorators ✨Llama.cppMarqoMediaWikiDumpMetalMicrosoft OneDriveMicrosoft PowerPointMicrosoft WordMilvusMLflowModalModelScopeModern TreasuryMomentoMotherduckMyScaleNLPCloudNotion DBObsidianOpenAIOpenLLMOpenSearchOpenWeatherMapPetalsPGVectorPineconePipelineAIPrediction GuardPromptLayerPsychicQdrantRay ServeRebuffRedditRedisReplicateRoamRocksetRunhouseRWKV-4SageMaker EndpointSearxNG Search APISerpAPIShale ProtocolSingleStoreDBscikit-learnSlackspaCySpreedlyStarRocksStochasticAIStripeTairTelegramTigris2MarkdownTrelloTruLensTwitterTypesenseUnstructuredVectaraVespaWeights & BiasesWeatherWeaviateWhatsAppWhyLabsWikipediaWolfram AlphaWriterYeager.aiYouTubeZepZillizDependentsAdditional resourcesAPI referenceEcosystemIntegrationsAirtableOn this pageAirtableAirtable is a cloud collaboration service.
+Airtable is a spreadsheet-database hybrid, with the features of a database but applied to a spreadsheet.
+The fields in an Airtable table are similar to cells in a spreadsheet, but have types such as 'checkbox',
+'phone number', and 'drop-down list', and can reference file attachments like images.Users can create a database, set up column types, add records, link tables to one another, collaborate, sort records
+and publish views to external websites.Installation and Setup​pip install pyairtableGet your API key.Get the ID of your base.Get the table ID from the table url.Document Loader​from langchain.document_loaders import AirtableLoaderSee an example.PreviousAirbyteNextAleph AlphaInstallation and SetupDocument LoaderCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

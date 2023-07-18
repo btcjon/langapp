@@ -1,0 +1,15 @@
+
+
+
+
+
+HTTP request chain | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsHow toFoundationalDocumentsPopularAdditionalAnalyze DocumentSelf-critique chain with constitutional AICausal program-aided language (CPAL) chainExtractionFLAREGraph DB QA chainHugeGraph QA ChainKuzuQAChainNebulaGraphQAChainGraph QAGraphSparqlQAChainHypothetical Document EmbeddingsBash chainSelf-checking chainMath chainHTTP request chainSummarization checker chainLLM Symbolic MathModerationDynamically selecting from multiple promptsDynamically selecting from multiple retrieversRetrieval QA using OpenAI functionsOpenAPI chainOpenAPI calls with OpenAI functionsProgram-aided language model (PAL) chainQuestion-Answering CitationsDocument QATaggingVector store-augmented text generationMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesChainsAdditionalHTTP request chainHTTP request chainUsing the request library to get HTML results from a URL and then an LLM to parse resultsfrom langchain.llms import OpenAIfrom langchain.chains import LLMRequestsChain, LLMChainfrom langchain.prompts import PromptTemplatetemplate = """Between >>> and <<< are the raw search result text from google.Extract the answer to the question '{query}' or say "not found" if the information is not contained.Use the formatExtracted:<answer or "not found">>>> {requests_result} <<<Extracted:"""PROMPT = PromptTemplate(    input_variables=["query", "requests_result"],    template=template,)chain = LLMRequestsChain(llm_chain=LLMChain(llm=OpenAI(temperature=0), prompt=PROMPT))question = "What are the Three (3) biggest countries, and their respective sizes?"inputs = {    "query": question,    "url": "https://www.google.com/search?q=" + question.replace(" ", "+"),}chain(inputs)    {'query': 'What are the Three (3) biggest countries, and their respective sizes?',     'url': 'https://www.google.com/search?q=What+are+the+Three+(3)+biggest+countries,+and+their+respective+sizes?',     'output': ' Russia (17,098,242 km²), Canada (9,984,670 km²), United States (9,826,675 km²)'}PreviousMath chainNextSummarization checker chainCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

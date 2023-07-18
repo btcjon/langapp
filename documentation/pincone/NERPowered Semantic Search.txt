@@ -1,0 +1,568 @@
+NER-Powered Semantic Search
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityNER-Powered Semantic SearchSuggest Edits  
+This notebook shows how to use Named Entity Recognition (NER) for hybrid metadata + vector search with Pinecone. We will:
+
+Extract named entities from text.
+Store them in a Pinecone index as metadata (alongside respective text vectors).
+We extract named entities from incoming queries and use them to filter and search only through records containing these named entities.
+
+This is particularly helpful if you want to restrict the search score to records that contain information about the named entities that are also found within the query.
+Let's get started.
+Install Dependencies
+Python!pip install sentence_transformers pinecone-client datasets
+
+Load and Prepare Dataset
+We use a dataset containing ~190K articles scraped from Medium. We select 50K articles from the dataset as indexing all the articles may take some time. This dataset can be loaded from the HuggingFace dataset hub as follows:
+Pythonfrom datasets import load_dataset
+
+# load the dataset and convert to pandas dataframe
+df = load_dataset(
+    "fabiochiu/medium-articles",
+    data_files="medium_articles.csv",
+    split="train"
+).to_pandas()
+
+Python# drop empty rows and select 50k articles
+df = df.dropna().sample(50000, random_state=32)
+df.head()
+
+
+
+
+
+
+
+
+
+title
+text
+url
+authors
+timestamp
+tags
+
+
+
+
+4172
+How the Data Stole Christmas
+by Anonymous\n\nThe door sprung open and our t...
+https://medium.com/data-ops/how-the-data-stole...
+[]
+2019-12-24 13:22:33.143000+00:00
+[Data Science, Big Data, Dataops, Analytics, D...
+
+
+174868
+Automating Light Switch using the ESP32 Board ...
+A story about how I escaped the boring task th...
+https://python.plainenglish.io/automating-ligh...
+['Tomas Rasymas']
+2021-09-14 07:20:52.342000+00:00
+[Programming, Python, Software Development, Ha...
+
+
+100171
+Keep Going Quotes Sayings for When Hope is Lost
+It’s a very thrilling thing to achieve a goal....
+https://medium.com/@yourselfquotes/keep-going-...
+['Yourself Quotes']
+2021-01-05 12:13:04.018000+00:00
+[Quotes]
+
+
+141757
+When Will the Smoke Clear From Bay Area Skies?
+Bay Area cities are contending with some of th...
+https://thebolditalic.com/when-will-the-smoke-...
+['Matt Charnock']
+2020-09-15 22:38:33.924000+00:00
+[Bay Area, San Francisco, California, Wildfire...
+
+
+183489
+The ABC’s of Sustainability… easy as 1, 2, 3
+By Julia DiPrete\n\n(according to the Jackson ...
+https://medium.com/sipwines/the-abcs-of-sustai...
+['Sip Wines']
+2021-03-02 23:39:49.948000+00:00
+[Wine Tasting, Sustainability, Wine]
+
+
+
+
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+width="24px">
+
+
+
+
+
+
+
+
+We will use the article title and its text for generating embeddings. For that, we join the article title and the first 1000 characters from the article text.
+Python# select first 1000 characters
+df["text"] = df["text"].str[:1000]
+# join article title and the text
+df["title_text"] = df["title"] + ". " + df["text"]
+
+Initialize NER Model
+To extract named entities, we will use a NER model finetuned on a BERT-base model. The model can be loaded from the HuggingFace model hub as follows:
+Pythonimport torch
+
+# set device to GPU if available
+device = torch.cuda.current_device() if torch.cuda.is_available() else None
+
+Pythonfrom transformers import AutoTokenizer, AutoModelForTokenClassification
+from transformers import pipeline
+
+model_id = "dslim/bert-base-NER"
+
+# load the tokenizer from huggingface
+tokenizer = AutoTokenizer.from_pretrained(
+    model_id
+)
+# load the NER model from huggingface
+model = AutoModelForTokenClassification.from_pretrained(
+    model_id
+)
+# load the tokenizer and model into a NER pipeline
+nlp = pipeline(
+    "ner",
+    model=model,
+    tokenizer=tokenizer,
+    aggregation_strategy="max",
+    device=device
+)
+
+Pythontext = "London is the capital of England and the United Kingdom"
+# use the NER pipeline to extract named entities from the text
+nlp(text)
+
+[{'entity_group': 'LOC',
+  'score': 0.9996493,
+  'word': 'London',
+  'start': 0,
+  'end': 6},
+ {'entity_group': 'LOC',
+  'score': 0.9997588,
+  'word': 'England',
+  'start': 25,
+  'end': 32},
+ {'entity_group': 'LOC',
+  'score': 0.9993923,
+  'word': 'United Kingdom',
+  'start': 41,
+  'end': 55}]
+
+Our NER pipeline is working as expected and accurately extracting entities from the text.
+Initialize Retriever
+A retriever model is used to embed passages (article title + first 1000 characters) and queries. It creates embeddings such that queries and passages with similar meanings are close in the vector space. We will use a sentence-transformer model as our retriever. The model can be loaded as follows:
+Pythonfrom sentence_transformers import SentenceTransformer
+
+# load the model from huggingface
+retriever = SentenceTransformer(
+    'flax-sentence-embeddings/all_datasets_v3_mpnet-base',
+    device=device
+)
+retriever
+
+Initialize Pinecone Index
+Now we need to initialize our Pinecone index. The Pinecone index stores vector representations of our passages which we can retrieve using another vector (the query vector). We first need to initialize our connection to Pinecone. For this, we need a free API key; you can find your environment in the Pinecone console under API Keys. We initialize the connection like so:
+Pythonimport pinecone
+
+# connect to pinecone environment
+pinecone.init(
+    api_key="YOUR_API_KEY",
+    environment="YOUR_ENVIRONMENT"
+)
+
+Now we can create our vector index. We will name it ner-search (feel free to chose any name you prefer). We specify the metric type as cosine and dimension as 768 as these are the vector space and dimensionality of the vectors output by the retriever model.
+Pythonindex_name = "ner-search"
+
+# check if the ner-search index exists
+if index_name not in pinecone.list_indexes():
+    # create the index if it does not exist
+    pinecone.create_index(
+        index_name,
+        dimension=768,
+        metric="cosine"
+    )
+
+# connect to ner-search index we created
+index = pinecone.Index(index_name)
+
+Generate Embeddings and Upsert
+We generate embeddings for the title_text column we created earlier. Alongside the embeddings, we also include the named entities in the index as metadata. Later we will apply a filter based on these named entities when executing queries.
+Let's first write a helper function to extract named entities from a batch of text.
+Pythondef extract_named_entities(text_batch):
+    # extract named entities using the NER pipeline
+    extracted_batch = nlp(text_batch)
+    entities = []
+    # loop through the results and only select the entity names
+    for text in extracted_batch:
+        ne = [entity["word"] for entity in text]
+        entities.append(ne)
+    return entities
+
+Now we create the embeddings. We do this in batches of 64 to avoid overwhelming machine resources or API request limits.
+Pythonfrom tqdm.auto import tqdm
+
+# we will use batches of 64
+batch_size = 64
+
+for i in tqdm(range(0, len(df), batch_size)):
+    # find end of batch
+    i_end = min(i+batch_size, len(df))
+    # extract batch
+    batch = df.iloc[i:i_end]
+    # generate embeddings for batch
+    emb = retriever.encode(batch["title_text"].tolist()).tolist()
+    # extract named entities from the batch
+    entities = extract_named_entities(batch["title_text"].tolist())
+    # remove duplicate entities from each record
+    batch["named_entities"] = [list(set(entity)) for entity in entities]
+    batch = batch.drop('title_text', axis=1)
+    # get metadata
+    meta = batch.to_dict(orient="records")
+    # create unique IDs
+    ids = [f"{idx}" for idx in range(i, i_end)]
+    # add all to upsert list
+    to_upsert = list(zip(ids, emb, meta))
+    # upsert/insert these records to pinecone
+    _ = index.upsert(vectors=to_upsert)
+ 
+# check that we have all vectors in index
+index.describe_index_stats()
+
+  100%|██████████| 782/782 [58:24<00:00, 2.24it/s]
+
+{'dimension': 768,
+ 'index_fullness': 0.1,
+ 'namespaces': {'': {'vector_count': 50000}},
+ 'total_vector_count': 50000}
+
+Now we have indexed the articles and relevant metadata. We can move on to querying.
+Querying
+First, we will write a helper function to handle the queries.
+Pythonfrom pprint import pprint
+
+def search_pinecone(query):
+    # extract named entities from the query
+    ne = extract_named_entities([query])[0]
+    # create embeddings for the query
+    xq = retriever.encode(query).tolist()
+    # query the pinecone index while applying named entity filter
+    xc = index.query(xq, top_k=10, include_metadata=True, filter={"named_entities": {"$in": ne}})
+    # extract article titles from the search result
+    r = [x["metadata"]["title"] for x in xc["matches"]]
+    return pprint({"Extracted Named Entities": ne, "Result": r})
+
+Now try a query.
+Pythonquery = "What are the best places to visit in Greece?"
+search_pinecone(query)
+
+{'Extracted Named Entities': ['Greece'],
+ 'Result': ['Budget-Friendly Holidays: Visit The Best Summer Destinations In '
+            'Greece | easyGuide',
+            'Exploring Greece',
+            'Santorini Island. The power of this volcanic island creates an '
+            'energy that overwhelms the senses…',
+            'All aboard to Greece: With lifting travel restrictions, what is '
+            'the future of the Greek tourism industry?',
+            'The Search for Best Villas in Greece for Rental Ends Here | '
+            'Alasvillas | Greece',
+            'Peripéteies in Greece — Week 31. Adventures in Greece as we '
+            'pursue the…',
+            '‘City of Waterfalls’ Home to Stunning Natural Scenery',
+            'Skiathos — The small paradise in the Sporades, Greece.',
+            'Greece has its own Dominic Cummings — and things are about to get '
+            'scary',
+            'One Must-Visit Attraction in Each of Europe’s Most Popular '
+            'Cities']}
+
+Pythonquery = "What are the best places to visit in London?"
+search_pinecone(query)
+
+{'Extracted Named Entities': ['London'],
+ 'Result': ['Historical places to visit in London',
+            'Never Die Without Seeing London-1',
+            'London LOOP: walk all the way around the capital',
+            'To London, In London',
+            'You’ll never look at London the same way again after playing '
+            'Pokemon GO',
+            'Recommendation system to start a restaurant business in London',
+            'Primrose and Regent’s Park London Walk — Portraits in the City',
+            'Parliaments, picnics and social cleansing: a walk in London',
+            'Universities’ role in building back London',
+            'The Building of London']}
+
+Pythonquery = "Why does SpaceX want to build a city on Mars?"
+search_pinecone(query)
+
+{'Extracted Named Entities': ['SpaceX', 'Mars'],
+ 'Result': ['Elon Musk: First Mars City Will Take 1,000 Starships, 20 Years',
+            'Elon Musk, SpaceX and NASA Are Taking The Second Step In The '
+            'Direction Of Mars',
+            'WHAT ETHICS FRAMEWORK IS NEEDED TO DEVELOP SPACE?',
+            'What is the SpaceX- Starship Mission? What is the SpaceX Mars '
+            'Architecture?',
+            'There is a 100% chance of dying on Mars. Why Elon Musk’s plans '
+            'are suicide for astronauts?',
+            'The Mars Conundrum',
+            'Tesla’s “Starman” or 2001’s “Star Child”—Which One Should Guide '
+            'Our Species Into Space?',
+            'Mars Habitat: NASA 3D Printed Habitat Challenge',
+            'Reusable rockets and the robots at sea: The SpaceX story',
+            'Mars Is Overrated and Going There Isn’t Progress']}
+
+These all look like great results, making the most of Pinecone's advanced vector search capabilities while limiting search scope to relevant records only with a named entity filter.Updated 6 months ago Table of Contents
+Install Dependencies
+Load and Prepare Dataset
+Initialize NER Model
+Initialize Retriever
+Initialize Pinecone Index
+Generate Embeddings and Upsert
+Querying
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

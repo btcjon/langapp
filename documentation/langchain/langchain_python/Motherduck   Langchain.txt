@@ -1,0 +1,17 @@
+
+
+
+
+
+Motherduck | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemIntegrationsWandB TracingAI21 LabsAimAirbyteAirtableAleph AlphaAlibaba Cloud OpensearchAmazon API GatewayAnalyticDBAnnoyAnyscaleApifyArgillaArthurArxivAtlasDBAwaDBAWS S3 DirectoryAZLyricsAzure Blob StorageAzure Cognitive SearchAzure OpenAIBananaBasetenBeamBedrockBiliBiliBlackboardBrave SearchCassandraCerebriumAIChaindeskChromaClarifaiClearMLCnosDBCohereCollege ConfidentialCometConfluenceC TransformersDatabricksDatadog LogsDataForSEODeepInfraDeep LakeDiffbotDiscordDocugamiDuckDBElasticsearchEverNoteFacebook ChatFigmaFlyteForefrontAIGitGitBookGoogle BigQueryGoogle Cloud StorageGoogle DriveGoogle SearchGoogle SerperGooseAIGPT4AllGraphsignalGrobidGutenbergHacker NewsHazy ResearchHeliconeHologresHugging FaceiFixitIMSDbInfinoJinaLanceDBLangChain Decorators ✨Llama.cppMarqoMediaWikiDumpMetalMicrosoft OneDriveMicrosoft PowerPointMicrosoft WordMilvusMLflowModalModelScopeModern TreasuryMomentoMotherduckMyScaleNLPCloudNotion DBObsidianOpenAIOpenLLMOpenSearchOpenWeatherMapPetalsPGVectorPineconePipelineAIPrediction GuardPromptLayerPsychicQdrantRay ServeRebuffRedditRedisReplicateRoamRocksetRunhouseRWKV-4SageMaker EndpointSearxNG Search APISerpAPIShale ProtocolSingleStoreDBscikit-learnSlackspaCySpreedlyStarRocksStochasticAIStripeTairTelegramTigris2MarkdownTrelloTruLensTwitterTypesenseUnstructuredVectaraVespaWeights & BiasesWeatherWeaviateWhatsAppWhyLabsWikipediaWolfram AlphaWriterYeager.aiYouTubeZepZillizDependentsAdditional resourcesAPI referenceEcosystemIntegrationsMotherduckOn this pageMotherduckMotherduck is a managed DuckDB-in-the-cloud service.Installation and Setup​First, you need to install duckdb python package.pip install duckdbYou will also need to sign up for an account at MotherduckAfter that, you should set up a connection string - we mostly integrate with Motherduck through SQLAlchemy.
+The connection string is likely in the form:token="..."conn_str = f"duckdb:///md:{token}@my_db"SQLChain​You can use the SQLChain to query data in your Motherduck instance in natural language.from langchain import OpenAI, SQLDatabase, SQLDatabaseChaindb = SQLDatabase.from_uri(conn_str)db_chain = SQLDatabaseChain.from_llm(OpenAI(temperature=0), db, verbose=True)From here, see the SQL Chain documentation on how to use.LLMCache​You can also easily use Motherduck to cache LLM requests.
+Once again this is done through the SQLAlchemy wrapper.import sqlalchemyeng = sqlalchemy.create_engine(conn_str)langchain.llm_cache = SQLAlchemyCache(engine=eng)From here, see the LLM Caching documentation on how to use.PreviousMomentoNextMyScaleInstallation and SetupSQLChainLLMCacheCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

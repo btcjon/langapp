@@ -1,0 +1,492 @@
+Metadata Filtered Search
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityMetadata Filtered SearchSuggest Edits  
+Pinecone offers a production-ready vector database for high performance and reliable semantic search at scale. But did you know Pinecone's semantic search can be paired with the more traditional keyword search?
+Semantic search is a compelling technology allowing us to search using abstract concepts and meaning rather than relying on specific words. However, sometimes a simple keyword search can be just as valuable — especially if we know the exact wording of what we're searching for.
+
+
+
+Hybrid search allows us to use Pinecone’s single-stage filtering to restrict the search scope using specific keywords, then continue with a semantic search.
+Pinecone allows you to pair semantic search with a basic keyword filter. If you know that the document you're looking for contains a specific word or set of words, you simply tell Pinecone to restrict the search to only include documents with those keywords.
+We even support functionality for keyword search using sets of words with AND, OR, NOT logic.
+In this article, we will explore these features through a start-to-finish example of basic keyword search in Pinecone.
+
+Data Preparation and Upsert
+The first thing we need to do is create some data. We will keep things simple with 10 sentences.
+Pythonall_sentences = [
+    "purple is the best city in the forest",
+    "No way chimps go bananas for snacks!",
+    "it is not often you find soggy bananas on the street",
+    "green should have smelled more tranquil but somehow it just tasted rotten",
+    "joyce enjoyed eating pancakes with ketchup",
+    "throwing bananas on to the street is not art",
+    "as the asteroid hurtled toward earth becky was upset her dentist appointment had been canceled",
+    "I'm getting way too old. I don't even buy green bananas anymore.",
+    "to get your way you must not bombard the road with yellow fruit",
+    "Time flies like an arrow; fruit flies like a banana"
+]
+
+On the semantic side of our search, we will introduce a new query sentence and search for the most semantically similar. To do this, we will need to create some sentence embeddings using our sentences. We will use a pretrained model from sentence-transformers for this.
+Pythonfrom sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('flax-sentence-embeddings/all_datasets_v3_mpnet-base')
+
+all_embeddings = model.encode(all_sentences)
+all_embeddings.shape
+
+(10, 768)
+
+We now have 10 sentence embeddings, each with a dimensionality of 768. If we just wanted semantic search, we could move onto upserting the data — but there is one more step for keyword search.
+Keyword search requires keywords, so we make a list of words (or 'tokens') for each sentence. To do this we can use a word-level tokenizer from Hugging Face’s transformers.
+Pythonfrom transformers import AutoTokenizer
+
+# transfo-xl tokenizer uses word-level encodings
+tokenizer = AutoTokenizer.from_pretrained('transfo-xl-wt103')
+
+all_tokens = [tokenizer.tokenize(sentence.lower()) for sentence in all_sentences]
+all_tokens[0]
+
+['purple', 'is', 'the', 'best', 'city', 'in', 'the', 'forest']
+
+We have all the data we need for our semantic and keyword search, so we can move on to initializing a connection to our Pinecone instance. All we need here is an API key, and then we can create a new index called keyword-search (you can name it anything you like). You can find your environment in the Pinecone console under API Keys.
+Pythonimport pinecone
+
+# connect to pinecone environment
+pinecone.init(
+    api_key="YOUR_API_KEY",
+    environment="YOUR_ENVIRONMENT"
+)
+
+pinecone.list_indexes()  # check if keyword-search index already exists
+
+pinecone.create_index(name='keyword-search', dimension=all_embeddings.shape[1])
+index = pinecone.Index('keyword-search')
+
+All we do now is upsert our data — which we reformat into a list of tuples where each tuple is structured as (id, values, metadata).
+Pythonupserts = [(v['id'], v['values'], v['metadata']) for v in data]
+# then we upsert
+index.upsert(vectors=upserts)
+
+{'upsertedCount': 10.0}
+
+It’s also possible to upsert data to Pinecone using cURL. For this we reformat our data and save it as a JSON file.
+Pythonimport json
+
+# reformat the data
+upserts = {'vectors': []}
+for i, (embedding, tokens) in enumerate(zip(all_embeddings, all_tokens)):
+    vector = {'id':f'{i}',
+              'values': embedding.tolist(),
+              'metadata':{'tokens':tokens}}
+    upserts['vectors'].append(vector)
+
+# save to JSON
+with open('./upsert.json', 'w') as f:
+    json.dump(upserts, f, indent=4)
+
+Here we’ve build a JSON file containing a list of 10 records within the vectors key. Each record contains ID, embeddings, and metadata in the format:
+JSON{
+    "id": "i",
+    "values": [0.001, 0.001, ...],
+    "metadata": {
+        "tokens": ["purple", "is", ...]
+    }
+}
+
+To upsert with curl, we first need the index URL — which can be found in your Pinecone dashboard, it should look something like:
+https://keyword-search-1234.svc.YOUR_ENVIRONMENT.pinecone.io/vectors/upsert
+
+With that, we upsert:
+Bash!curl -X POST \
+    https://keyword-search-1234.svc.YOUR_ENVIRONMENT.pinecone.io/vectors/upsert \
+    -H ‘Content-Type: application/json’ \
+    -H ‘Api-Key: <YOUR-API-KEY>’ \
+    -d @./upsert.json
+
+Now that we've upserted the data to our index, we can move on to semantic and keyword search.
+Semantic and Keyword Search
+We'll start with a semantic search without keywords. As we did with our indexed sentences, we need to encode a query sentence.
+Pythonquery_sentence = "there is an art to getting your way and throwing bananas on to the street is not it"
+xq = model.encode(query_sentence).tolist()
+
+We then find the most semantically similar sentences to this query vector xq with query — we will return all ten sentences by setting top_k=10.
+Pythonresult = index.query(xq, top_k=10, includeMetadata=True)
+result
+
+{'matches': [{'id': '5',
+              'metadata': {'tokens': ['throwing',
+                                      'bananas',
+                                      'on',
+                                      'to',
+                                      'the',
+                                      'street',
+                                      'is',
+                                      'not',
+                                      'art']},
+              'score': 0.732851923,
+              'values': []},
+             {'id': '8',
+              'metadata': {'tokens': ['to',
+                                      'get',
+                                      'your',
+                                      'way',
+                                      'you',
+                                      'must',
+                                      'not',
+                                      'bombard',
+                                      'the',
+                                      'road',
+                                      'with',
+                                      'yellow',
+                                      'fruit']},
+              'score': 0.574427,
+              'values': []}],
+ 'namespace': ''}
+
+Python[x['id'] for x in result['matches']]
+
+['5', '8', '2', '1', '9', '7', '0', '3', '4', '6']
+
+The response shows both the most similar sentence IDs and their respective metadata field, which contains the list of tokens we created earlier.
+We perform a keyword search by filtering records with the tokens metadata field. If we wanted to only return records that contain the token 'bananas' we can like so:
+Pythonresult = index.query(xq, top_k=10, filter={'tokens': 'bananas'})
+ids = [x['id'] for x in result['matches']]
+ids
+
+['5', '2', '1', '7']
+
+Immediately we can see that we return far fewer sentences. This is because there are only four records that contain the word 'bananas'. We can use those ids to see which sentences we've returned.
+Pythonfor i in ids:
+    print(all_sentences[i])
+
+throwing bananas on to the street is not art
+it is not often you find soggy bananas on the street
+No way chimps go bananas for snacks!
+I'm getting way too old. I don't even buy green bananas anymore.
+
+Looks great! We can extend the keyword search filter to include multiple words — specifying whether we'd like to return results that contain all words using $and, or any word using $or/$in.
+If we wanted to return records that contain either 'bananas' or 'way' with metadata filtering: 
+{'$or': [{'tokens': 'bananas'}, {'tokens': 'way'}]}
+This filter will return any records that satisfy one or more of these conditions — where the tokens list contains ’bananas’ or the tokens list contains ’way’.
+Pythonresult = index.query(xq, top_k=10, filter={'$or': [
+                         {'tokens': 'bananas'},
+                         {'tokens': 'way'}
+                     ]})
+
+ids = [int(x['id']) for x in result['matches']]
+for i in ids:
+    print(all_sentences[i])
+
+Alternatively, we can write these multi-keyword $or queries using the $in condition. This modifier tells Pinecone to filter for records where the tokens list contains any word from the list we define.
+Pythonresult = index.query(xq, top_k=10, filter={
+    'tokens': {'$in': ['bananas', 'way']}
+})
+
+ids = [int(x['id']) for x in result['matches']]
+for i in ids:
+    print(all_sentences[i])
+
+throwing bananas on to the street is not art
+to get your way you must not bombard the road with yellow fruit
+it is not often you find soggy bananas on the street
+No way chimps go bananas for snacks!
+I'm getting way too old. I don't even buy green bananas anymore.
+
+Both $or and $in produce the same logic above. What if we wanted records that contain both 'bananas' and 'way'? All we do is swap $or for $and.
+Pythonresult = index.query(xq, top_k=10, filter={'$and': [
+                         {'tokens': 'bananas'},
+                         {'tokens': 'way'}
+                     ]})
+
+ids = [int(x['id']) for x in result['matches']]
+for i in ids:
+    print(all_sentences[i])
+
+No way chimps go bananas for snacks!
+I'm getting way too old. I don't even buy green bananas anymore.
+
+If we have a lot of keywords, including every single one with the $and condition manually would not be fun, so we write something like this instead:
+Pythonkeywords = ['bananas', 'way', 'green']
+filter_dict = [{'tokens': word} for word in keywords]
+filter_dict
+
+[{'tokens': 'bananas'}, {'tokens': 'way'}, {'tokens': 'green'}]
+
+Pythonresult = index.query(xq, top_k=10, filter={'$and': filter_dict})
+
+ids = [int(x['id']) for x in result['matches']]
+for i in ids:
+    print(all_sentences[i])
+
+I'm getting way too old. I don't even buy green bananas anymore.
+
+And now we're restricting our semantic search to records that contain any word from 'bananas', 'way', or 'green'.
+If we like we can add negation to our logic too. For example we may want all sentences that do not contain ’bananas’ but do contain ’way’. To do this we add not equals $ne to the ’bananas’ condition.
+Pythonresult = index.query(xq, top_k=10, filter={'$and': [
+                         {'tokens': {'$ne': 'bananas'}},
+                         {'tokens': 'way'}
+                     ]})
+
+ids = [int(x['id']) for x in result['matches']]
+for i in ids:
+    print(all_sentences[i])
+
+to get your way you must not bombard the road with yellow fruit
+
+Or if we want to not return sentences that contain any of several words, we use the not in $nin modifier.
+Pythonresult = index.query(xq, top_k=10, filter={'tokens':
+    {'$nin': ['bananas', 'way']}
+})
+
+ids = [int(x['id']) for x in result['matches']]
+for i in ids:
+    print(all_sentences[i])
+
+Time flies like an arrow; fruit flies like a banana
+purple is the best city in the forest
+green should have smelled more tranquil but somehow it just tasted rotten
+joyce enjoyed eating pancakes with ketchup
+as the asteroid hurtled toward earth becky was upset her dentist appointment had been canceled
+
+That's it for this introduction to keyword search in Pinecone. We've set up and upserted our sentence embeddings for semantic search and a token list for keyword search. Then we explored how we restrict our search to records containing a specific keyword, or even set of keywords using the two $and / $or modifiers.Updated 13 days ago Table of Contents
+Data Preparation and Upsert
+Semantic and Keyword Search
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

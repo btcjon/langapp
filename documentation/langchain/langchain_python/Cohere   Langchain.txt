@@ -1,0 +1,15 @@
+
+
+
+
+
+Cohere | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersDocument transformersText embedding modelsIntegrationsAleph AlphaAzureOpenAIBedrock EmbeddingsClarifaiCohereDashScopeDeepInfraElasticsearchEmbaasFake EmbeddingsGoogle Cloud Platform Vertex AI PaLMHugging Face HubInstructEmbeddingsJinaLlama-cppMiniMaxModelScopeMosaicML embeddingsOpenAISageMaker Endpoint EmbeddingsSelf Hosted EmbeddingsSentence Transformers EmbeddingsSpacy EmbeddingTensorflowHubVector storesRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionText embedding modelsIntegrationsCohereCohereLet's load the Cohere Embedding class.from langchain.embeddings import CohereEmbeddingsembeddings = CohereEmbeddings(cohere_api_key=cohere_api_key)text = "This is a test document."query_result = embeddings.embed_query(text)doc_result = embeddings.embed_documents([text])PreviousClarifaiNextDashScopeCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

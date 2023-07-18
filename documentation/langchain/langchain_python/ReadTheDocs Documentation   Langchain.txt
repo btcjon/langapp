@@ -1,0 +1,15 @@
+
+
+
+
+
+ReadTheDocs Documentation | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersHow-toIntegrationsacreomAirbyte JSONAirtableAlibaba Cloud MaxComputeApify DatasetArxivAWS S3 DirectoryAWS S3 FileAZLyricsAzure Blob Storage ContainerAzure Blob Storage FileBibTeXBiliBiliBlackboardBlockchainBrave Searchchatgpt_loaderCollege ConfidentialConfluenceCoNLL-UCopy PasteCSVCube Semantic LayerDatadog LogsDiffbotDiscordDocugamiDuckDBEmailEmbaasEPubEverNoteexample_dataMicrosoft ExcelFacebook ChatFaunaFigmaGitGitBookGitHubGoogle BigQueryGoogle Cloud Storage DirectoryGoogle Cloud Storage FileGoogle DriveGrobidGutenbergHacker NewsHuggingFace datasetiFixitImagesImage captionsIMSDbIuguJoplinJupyter NotebookLarkSuite (FeiShu)MastodonMediaWikiDumpMergeDocLoadermhtmlMicrosoft OneDriveMicrosoft PowerPointMicrosoft WordModern TreasuryNotion DB 1/2Notion DB 2/2ObsidianOpen Document Format (ODT)Open City DataOrg-modePandas DataFramePsychicPySpark DataFrame LoaderReadTheDocs DocumentationRecursive URL LoaderRedditRoamRSTSitemapSlackSnowflakeSource CodeSpreedlyStripeSubtitleTelegramTencent COS DirectoryTencent COS File2MarkdownTOMLTrelloTSVTwitterUnstructured FileURLWeatherWebBaseLoaderWhatsApp ChatWikipediaXMLXorbits Pandas DataFrameLoading documents from a YouTube urlYouTube transcriptsDocument transformersText embedding modelsVector storesRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionDocument loadersIntegrationsReadTheDocs DocumentationReadTheDocs DocumentationRead the Docs is an open-sourced free software documentation hosting platform. It generates documentation written with the Sphinx documentation generator.This notebook covers how to load content from HTML that was generated as part of a Read-The-Docs build.For an example of this in the wild, see here.This assumes that the HTML has already been scraped into a folder. This can be done by uncommenting and running the following command#!pip install beautifulsoup4#!wget -r -A.html -P rtdocs https://python.langchain.com/en/latest/from langchain.document_loaders import ReadTheDocsLoaderloader = ReadTheDocsLoader("rtdocs", features="html.parser")docs = loader.load()PreviousPySpark DataFrame LoaderNextRecursive URL LoaderCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

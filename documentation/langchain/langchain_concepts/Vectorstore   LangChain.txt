@@ -1,0 +1,15 @@
+
+
+
+
+
+Vectorstore | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsPromptsIndexesDocument LoadersText SplittersRetrieverVectorstoreMemoryChainsAgentsUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsIndexesVectorstoreVectorstoreinfoPython GuideJS GuideThe most common type of index is one that creates numerical embeddings (with an Embedding Model) for each document. A vectorstore stores Documents and associated embeddings, and provides fast ways to look up relevant Documents by embeddings.PreviousRetrieverNextMemoryCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

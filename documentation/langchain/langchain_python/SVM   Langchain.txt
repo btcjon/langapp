@@ -1,0 +1,15 @@
+
+
+
+
+
+SVM | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersDocument transformersText embedding modelsVector storesRetrieversHow-toIntegrationsAmazon KendraArxivAzure Cognitive SearchChaindeskChatGPT PluginCohere RerankerDocArray RetrieverElasticSearch BM25kNNLOTR (Merger Retriever)MetalPinecone Hybrid SearchPubMedSVMTF-IDFVespaWeaviate Hybrid SearchWikipediaZepChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionRetrieversIntegrationsSVMOn this pageSVMSupport vector machines (SVMs) are a set of supervised learning methods used for classification, regression and outliers detection.This notebook goes over how to use a retriever that under the hood uses an SVM using scikit-learn package.Largely based on https://github.com/karpathy/randomfun/blob/master/knn_vs_svm.html#!pip install scikit-learn#!pip install larkWe want to use OpenAIEmbeddings so we have to get the OpenAI API Key.import osimport getpassos.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")    OpenAI API Key: ········from langchain.retrievers import SVMRetrieverfrom langchain.embeddings import OpenAIEmbeddingsCreate New Retriever with Texts​retriever = SVMRetriever.from_texts(    ["foo", "bar", "world", "hello", "foo bar"], OpenAIEmbeddings())Use Retriever​We can now use the retriever!result = retriever.get_relevant_documents("foo")result    [Document(page_content='foo', metadata={}),     Document(page_content='foo bar', metadata={}),     Document(page_content='hello', metadata={}),     Document(page_content='world', metadata={})]PreviousPubMedNextTF-IDFCreate New Retriever with TextsUse RetrieverCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

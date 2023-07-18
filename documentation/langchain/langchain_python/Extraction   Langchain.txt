@@ -1,0 +1,24 @@
+
+
+
+
+
+Extraction | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsMemoryAgentsCallbacksModulesUse casesAgent simulationsAgentsInteracting with APIsAutonomous (long-running) agentsChatbotsCode UnderstandingExtractionMulti-modalQA and Chat over DocumentsSummarizationAnalyzing structured dataGuidesEcosystemAdditional resourcesAPI referenceUse casesExtractionExtractionMost APIs and databases still deal with structured information.
+Therefore, in order to better work with those, it can be useful to extract structured information from text.
+Examples of this include:Extracting a structured row to insert into a database from a sentenceExtracting multiple rows to insert into a database from a long documentExtracting the correct API parameters from a user queryThis work is extremely related to output parsing.
+Output parsers are responsible for instructing the LLM to respond in a specific format.
+In this case, the output parsers specify the format of the data you would like to extract from the document.
+Then, in addition to the output format instructions, the prompt should also contain the data you would like to extract information from.While normal output parsers are good enough for basic structuring of response data,
+when doing extraction you often want to extract more complicated or nested structures.
+For a deep dive on extraction, we recommend checking out kor,
+a library that uses the existing LangChain chain and OutputParser abstractions
+but deep dives on allowing extraction of more complicated schemas.PreviousAnalysis of Twitter the-algorithm source code with LangChain, GPT4 and Activeloop's Deep LakeNextimage_agentCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

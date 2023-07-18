@@ -1,0 +1,15 @@
+
+
+
+
+
+DashScope | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersDocument transformersText embedding modelsIntegrationsAleph AlphaAzureOpenAIBedrock EmbeddingsClarifaiCohereDashScopeDeepInfraElasticsearchEmbaasFake EmbeddingsGoogle Cloud Platform Vertex AI PaLMHugging Face HubInstructEmbeddingsJinaLlama-cppMiniMaxModelScopeMosaicML embeddingsOpenAISageMaker Endpoint EmbeddingsSelf Hosted EmbeddingsSentence Transformers EmbeddingsSpacy EmbeddingTensorflowHubVector storesRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionText embedding modelsIntegrationsDashScopeDashScopeLet's load the DashScope Embedding class.from langchain.embeddings import DashScopeEmbeddingsembeddings = DashScopeEmbeddings(    model="text-embedding-v1", dashscope_api_key="your-dashscope-api-key")text = "This is a test document."query_result = embeddings.embed_query(text)print(query_result)doc_results = embeddings.embed_documents(["foo"])print(doc_results)PreviousCohereNextDeepInfraCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

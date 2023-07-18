@@ -1,0 +1,770 @@
+Node.JS Client
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityNode.JS ClientSuggest EditsThis page provides installation instructions, usage examples, and a reference for the Pinecone Node.JS client.
+⚠️WarningThis is a public preview ("Beta") client. Test thoroughly before
+using this client for production workloads. No SLAs or technical support
+commitments are provided for this client. Expect potential breaking
+changes in future releases.
+Getting Started
+Installation
+Use the following shell command to install the Node.JS client for use with Node.JS versions 17 and above:
+Shellnpm install @pinecone-database/pinecone
+
+Alternatively, you can install Pinecone with Yarn:
+Shellyarn add @pinecone-database/pinecone
+
+Usage
+Initialize the client
+To initialize the client, instantiate the PineconeClient class and call the init method. The init method takes an object with the apiKey and environment properties:
+JavaScriptimport { PineconeClient } from "@pinecone-database/pinecone";
+
+const pinecone = new PineconeClient();
+await pinecone.init({
+  environment: "YOUR_ENVIRONMENT",
+  apiKey: "YOUR_API_KEY",
+});
+
+Create index
+The following example creates an index without a metadata configuration. By default, Pinecone indexes all metadata.
+JavaScriptawait pinecone.createIndex({
+  createRequest: {
+    name: "example-index",
+    dimension: 1024,
+  },
+});
+
+The following example creates an index that only indexes the "color" metadata field. Queries against this index cannot filter based on any other metadata field.
+JavaScriptawait pinecone.createIndex({
+  createRequest: {
+    name: "example-index-2",
+    dimension: 1024,
+    metadataConfig: {
+      indexed: ["color"],
+    },
+  },
+});
+
+List indexes
+The following example logs all indexes in your project.
+JavaScriptconst indexesList = await pinecone.listIndexes();
+
+Describe index
+The following example logs information about the index example-index.
+JavaScriptconst indexDescription = await pinecone.describeIndex({
+  indexName: "example-index",
+});
+
+Delete index
+The following example deletes example-index.
+JavaScriptawait pinecone.deleteIndex({
+  indexName: "example-index",
+});
+
+Scale replicas
+The following example sets the number of replicas and pod type for example-index.
+JavaScriptawait pinecone.configureIndex({
+  indexName: "example-index",
+  patchRequest: {
+    replicas: 2,
+    podType: "p2",
+  },
+});
+
+Describe index statistics
+The following example returns statistics about the index example-index.
+JavaScriptconst index = pinecone.Index("example-index");
+const indexStats = index.describeIndexStats({
+  describeIndexStatsRequest: {
+    filter: {},
+  },
+});
+
+Upsert vectors
+The following example upserts vectors to example-index.
+JavaScriptconst index = pinecone.Index("example-index");
+const upsertRequest = {
+  vectors: [
+    {
+      id: "vec1",
+      values: [0.1, 0.2, 0.3, 0.4],
+      metadata: {
+        genre: "drama",
+      },
+    },
+    {
+      id: "vec2",
+      values: [0.2, 0.3, 0.4, 0.5],
+      metadata: {
+        genre: "action",
+      },
+    },
+  ],
+  namespace: "example-namespace",
+};
+const upsertResponse = await index.upsert({ upsertRequest });
+
+Query an index
+The following example queries the index example-index with metadata filtering.
+JavaScriptconst index = pinecone.Index("example-index");
+const queryRequest = {
+  vector: [0.1, 0.2, 0.3, 0.4],
+  topK: 10,
+  includeValues: true,
+  includeMetadata: true,
+  filter: {
+    genre: { $in: ["comedy", "documentary", "drama"] },
+  },
+  namespace: "example-namespace",
+};
+const queryResponse = await index.query({ queryRequest });
+
+Delete vectors
+The following example deletes vectors by ID.
+JavaScriptconst index = pinecone.Index("example-index");
+await index.delete1({
+  ids: ["vec1", "vec2"],
+  namespace: "example-namespace",
+});
+
+Fetch vectors
+The following example fetches vectors by ID.
+JavaScriptconst index = pinecone.Index("example-index");
+const fetchResponse = await index.fetch({
+  ids: ["vec1", "vec2"],
+  namespace: "example-namespace",
+});
+
+Update vectors
+The following example updates vectors by ID.
+JavaScriptconst index = pinecone.Index("example-index");
+const updateRequest = {
+  id: "vec1",
+  values: [0.1, 0.2, 0.3, 0.4],
+  setMetadata: { genre: "drama" },
+  namespace: "example-namespace",
+};
+const updateResponse = await index.update({ updateRequest });
+
+Create collection
+The following example creates the collection example-collection from example-index.
+JavaScriptconst createCollectionRequest = {
+  name: "example-collection",
+  source: "example-index",
+};
+
+await pinecone.createCollection({
+  createCollectionRequest,
+});
+
+List collections
+The following example returns a list of the collections in the current project.
+JavaScriptconst collectionsList = await pinecone.listCollections();
+
+Describe a collection
+The following example returns a description of the collection example-collection.
+JavaScriptconst collectionDescription = await pinecone.describeCollection({
+  collectionName: "example-collection",
+});
+
+Delete a collection
+The following example deletes the collection example-collection.
+JavaScriptawait pinecone.deleteCollection({
+  collectionName: "example-collection",
+});
+
+Reference
+For the REST API or other clients, see the API reference.
+init()
+pinecone.init(configuration: PineconeClientConfiguration)
+Initialize the Pinecone client.
+ParametersTypeDescriptionconfigurationPineconeClientConfigurationThe configuration for the Pinecone client.
+Types
+PineconeClientConfiguration
+ParametersTypeDescriptionapiKeystringThe API key for the Pinecone service.environmentstringThe cloud environment of your Pinecone project.
+Example:
+JavaScriptimport { PineconeClient } from "@pinecone-database/pinecone";
+const pinecone = new PineconeClient();
+await pinecone.init({
+  apiKey: "YOUR_API_KEY",
+  environment: "YOUR_ENVIRONMENT",
+});
+
+configureIndex()
+pinecone.configure_index(indexName: string, patchRequest?: PatchRequest)
+Configure an index to change pod type and number of replicas.
+ParametersTypeDescriptionrequestParametersConfigureIndexRequestIndex configuration parameters.
+Types
+ConfigureIndexRequest
+ParametersTypeDescriptionindexNamestringThe name of the index.patchRequestPatchRequest(Optional) Patch request parameters.
+PatchRequest
+ParametersTypeDescriptionreplicasnumber(Optional) The number of replicas to configure for this index.podTypestring(Optional) The new pod type for the index. One of s1, p1, or p2 appended with . and one of x1, x2, x4, or x8.
+Example:
+JavaScriptconst newNumberOfReplicas = 4;
+const newPodType = "s1.x4";
+await pinecone.configureIndex({
+  indexName: "example-index",
+  patchRequest: {
+    replicas: newNumberOfReplicas,
+    podType: newPodType,
+  },
+});
+
+createCollection()
+pinecone.createCollection(requestParameters: CreateCollectionOperationRequest)
+Create a collection from an index.
+ParametersTypeDescriptionrequestParametersCreateCollectionOperationRequestCreate collection operation wrapper
+Types
+CreateCollectionOperationRequest
+ParametersTypeDescriptioncreateCollectionRequestCreateCollectionRequestCollection request parameters.
+CreateCollectionRequest
+ParametersTypeDescriptionnamestringThe name of the collection to be created.sourcestringThe name of the source index to be used as the source for the collection.
+Example:
+JavaScriptawait pinecone.createCollection({
+  createCollectionRequest: {
+    name: "example-collection",
+    source: "example-index",
+  },
+});
+
+createIndex()
+pinecone.createIndex(requestParameters?: CreateIndexRequest)
+Create an index.
+ParametersTypeDescriptionrequestParametersCreateIndexRequestCreate index operation wrapper
+Types
+CreateIndexRequest
+ParametersTypeDescriptioncreateRequestCreateRequestCreate index request parameters
+CreateRequest
+ParametersTypeDescriptionnamestrThe name of the index to be created. The maximum length is 45 characters.dimensionintegerThe dimensions of the vectors to be inserted in the index.metricstr(Optional) The distance metric to be used for similarity search: 'euclidean', 'cosine', or 'dotproduct'.podsint(Optional) The number of pods for the index to use, including replicas.replicasint(Optional) The number of replicas.pod_typestr(Optional) The new pod type for the index. One of s1, p1, or p2 appended with . and one of x1, x2, x4, or x8.metadata_configobject(Optional) Configuration for the behavior of Pinecone's internal metadata index. By default, all metadata is indexed; when metadata_config is present, only specified metadata fields are indexed. To specify metadata fields to index, provide a JSON object of the following form: {"indexed": ["example_metadata_field"]}source_collectionstr(Optional) The name of the collection to create an index from.
+Example:
+JavaScript// The following example creates an index without a metadata
+// configuration. By default, Pinecone indexes all metadata.
+await pinecone.createIndex({
+  createRequest: {
+    name: "pinecone-index",
+    dimension: 1024,
+  },
+});
+
+// The following example creates an index that only indexes
+// the 'color' metadata field. Queries against this index
+// cannot filter based on any other metadata field.
+
+await pinecone.createIndex({
+  createRequest: {
+    name: "example-index-2",
+    dimension: 1024,
+    metadata_config: {
+      indexed: ["color"],
+    },
+  },
+});
+
+deleteCollection()
+pinecone.deleteCollection(requestParameters: DeleteCollectionRequest)
+Delete an existing collection.
+Types
+ParametersTypeDescriptionrequestParametersDeleteCollectionRequestDelete collection request parameters
+DeleteCollectionRequest
+ParametersTypeDescriptioncollectionNamestringThe name of the collection to delete.
+Example:
+JavaScriptawait pinecone.deleteCollection({
+  collectionName: "example-collection",
+});
+
+deleteIndex()
+pinecone.deleteIndex(requestParameters: DeleteIndexRequest)
+Delete an index.
+Types
+ParametersTypeDescriptionrequestParametersDeleteIndexRequestDelete index request parameters
+DeleteIndexRequest
+ParametersTypeDescriptionindexNamestringThe name of the index to delete.
+Example:
+JavaScriptawait pinecone.deleteIndex({
+  indexName: "example-index",
+});
+
+describeCollection()
+pinecone.describeCollection(requestParameters: DescribeCollectionRequest)
+Get a description of a collection.
+Types
+ParametersTypeDescriptionrequestParametersDescribeCollectionRequestDescribe collection request parameters
+DescribeCollectionRequest
+ParametersTypeDescriptioncollectionNamestringThe name of the collection.
+Example:
+JavaScriptconst collectionDescription = await pinecone.describeCollection({
+  collectionName: "example-collection",
+});
+
+Return:
+
+collectionMeta : object Configuration information and deployment status of the collection.
+name : string The name of the collection.
+size: integer The size of the collection in bytes.
+status: string The status of the collection.
+
+
+describeIndex()
+pinecone.describeIndex(requestParameters: DescribeIndexRequest)
+Get a description of an index.
+Types
+ParametersTypeDescriptionrequestParametersDescribeIndexRequestDescribe index request parameters
+DescribeIndexRequest
+ParametersTypeDescriptionindexNamestringThe name of the index.
+Types
+Returns:
+
+database : object
+name : string The name of the index.
+dimension : integer The dimensions of the vectors to be inserted in the index.
+metric : string The distance metric used for similarity search: 'euclidean', 'cosine', or 'dotproduct'.
+pods : integer The number of pods the index uses, including replicas.
+replicas : integer The number of replicas.
+pod_type : string The pod type for the index. One of s1, p1, or p2 appended with . and one of x1, x2, x4, or x8.
+metadata_config: object Configuration for the behavior of Pinecone's internal metadata index. By default, all metadata is indexed; when metadata_config is present, only specified metadata fields are indexed. To specify metadata fields to index, provide a JSON object of the following form: {"indexed": ["example_metadata_field"]} 
+status : object
+ready : boolean Whether the index is ready to serve queries.
+state : string One of Initializing, ScalingUp, ScalingDown, Terminating, or Ready.
+
+Example:
+JavaScriptconst indexDescription = await pinecone.describeIndex({
+  indexName: "example-index",
+});
+
+listCollections
+pinecone.listCollections()
+Return a list of the collections in your project.
+Example:
+JavaScriptconst collections = await pinecone.listCollections();
+
+Returns:
+
+array of strings The names of the collections in your project.
+
+listIndexes
+pinecone.listIndexes()
+Return a list of your Pinecone indexes.
+Returns:
+
+array of strings The names of the indexes in your project.
+
+Example:
+JavaScriptconst indexesList = await pinecone.listIndexes();
+
+Index()
+pinecone.Index(indexName: string)
+Construct an Index object.
+ParametersTypeDescriptionindexNamestringThe name of the index.
+Example:
+JavaScriptconst index = pinecone.Index("example-index");
+
+Index.delete1()
+index.delete(requestParameters: Delete1Request)
+Delete items by their ID from a single namespace.
+ParametersTypeDescriptionrequestParametersDelete1RequestDelete request parameters
+Types
+Delete1Request
+ParametersTypeDescriptionidsArray(Optional) The IDs of the items to delete.deleteAllboolean(Optional) Indicates that all vectors in the index namespace should be deleted.namespacestr(Optional) The namespace to delete vectors from, if applicable.
+Types
+Example:
+JavaScriptawait index.delete1({
+  ids: ["example-id-1", "example-id-2"],
+  namespace: "example-namespace",
+});
+
+Index.describeIndexStats()
+index.describeIndexStats(requestParameters: DescribeIndexStatsOperationRequest)
+Returns statistics about the index's contents, including the vector count per namespace and the number of dimensions.
+ParametersTypeDescriptionrequestParametersDescribeIndexStatsOperationRequestDescribe index stats request wrapper
+Types
+DescribeIndexStatsOperationRequest
+ParametersTypeDescriptiondescribeIndexStatsRequestDescribeIndexStatsRequestDescribe index stats request parameters
+DescribeIndexStatsRequest
+parameterTypeDescriptionfilterobject(Optional) A metadata filter expression.
+Returns:
+
+namespaces : object A mapping for each namespace in the index from the namespace name to a
+summary of its contents. If a metadata filter expression is present, the summary will reflect only vectors matching that expression.
+dimension : int64 The dimension of the indexed vectors.
+indexFullness : float The fullness of the index, regardless of whether a metadata filter expression was passed. The granularity of this metric is 10%.
+totalVectorCount : int64 The total number of vectors in the index.
+
+Example:
+JavaScriptconst indexStats = await index.describeIndexStats({
+  describeIndexStatsRequest: {},
+});
+
+Read more about filtering for more detail.
+Index.fetch()
+index.fetch(requestParameters: FetchRequest)
+The Fetch operation looks up and returns vectors, by ID, from a single namespace. The returned vectors include the vector data and metadata.
+ParametersTypeDescriptionrequestParametersFetchRequestFetch request parameters
+Types
+FetchRequest
+ParametersTypeDescriptionidsArrayThe vector IDs to fetch. Does not accept values containing spaces.namespacestring(Optional) The namespace containing the vectors.
+Returns:
+
+vectors : object Contains the vectors.
+namespace : string The namespace of the vectors.
+
+Example:
+JavaScriptconst fetchResponse = await index.fetch({
+  ids: ["example-id-1", "example-id-2"],
+  namespace: "example-namespace",
+});
+
+Index.query()
+index.query(requestParameters: QueryOperationRequest)
+Search a namespace using a query vector. Retrieves the ids of the most similar items in a namespace, along with their similarity scores.
+ParametersTypeDescriptionrequestParametersQueryOperationRequestThe query operation request wrapper.
+Types
+ParametersTypeDescriptionqueryRequestQueryRequestThe query operation request.
+QueryRequest
+ParameterTypeDescriptionnamespacestring(Optional) The namespace to query.topKnumberThe number of results to return for each query.filterobject(Optional) The filter to apply. You can use vector metadata to limit your search. See https://www.pinecone.io/docs/metadata-filtering/.includeValuesboolean(Optional) Indicates whether vector values are included in the response. Defaults to false.includeMetadataboolean(Optional) Indicates whether metadata is included in the response as well as the ids. Defaults to false.vectorArray(Optional) The query vector. This should be the same length as the dimension of the index being queried. Each query() request can contain only one of the parameters id or vector.idstring(Optional) The unique ID of the vector to be used as a query vector. Each query() request can contain only one of the parameters vector or id.
+Example:
+JavaScriptconst queryResponse = await index.query({
+  queryRequest: {
+    namespace: "example-namespace",
+    topK: 10,
+    filter: {
+      genre: { $in: ["comedy", "documentary", "drama"] },
+    },
+    includeValues: true,
+    includeMetadata: true,
+    vector: [0.1, 0.2, 0.3, 0.4],
+  },
+});
+
+Index.update()
+index.update(requestParameters: UpdateOperationRequest)
+Updates vectors in a namespace. If a value is included, it will overwrite the previous value.
+If setMetadata is included in the updateRequest, the values of the fields specified in it will be added or overwrite the previous value.
+ParametersTypeDescriptionrequestParametersUpdateOperationRequestThe update operation wrapper
+Types
+UpdateOperationRequest
+ParametersTypeDescriptionupdateRequestUpdateRequestThe update request.
+UpdateRequest
+ParameterTypeDescriptionidstringThe vector's unique ID.valuesArray(Optional) Vector data.setMetadataobject(Optional) Metadata to set for the vector.namespacestring(Optional) The namespace containing the vector.
+Example:
+JavaScriptconst updateResponse = await index.update({
+  updatedRequest: {
+    id: "vec1",
+    values: [0.1, 0.2, 0.3, 0.4],
+    setMetadata: {
+      genre: "drama",
+    },
+    namespace: "example-namespace",
+  },
+});
+
+Index.upsert()
+index.upsert(requestParameters: UpsertOperationRequest)
+Writes vectors into a namespace. If a new value is upserted for an existing vector ID, it will overwrite the previous value.
+ParametersTypeDescriptionrequestParametersUpsertOperationRequestUpsert operation wrapper
+Types
+UpsertOperationRequest
+ParametersTypeDescriptionupsertRequestUpsertRequestThe upsert request.
+UpsertRequest
+| Parameter | Type | Description |
+| vectors | Array | An array containing the vectors to upsert. Recommended batch limit is 100 vectors.id (str) - The vector's unique id.values ([float]) - The vector data.metadata (object) - (Optional) Metadata for the vector. |
+| namespace | string | (Optional) The namespace name to upsert vectors. |
+Vector
+ParameterTypeDescriptionidstringThe vector's unique ID.valuesArrayVector data.metadataobject(Optional) Metadata for the vector.
+Returns:
+
+upsertedCount : int64 The number of vectors upserted.
+
+Example:
+JavaScriptconst upsertResponse = await index.upsert({
+  upsertRequest: {
+    vectors: [
+      {
+        id: "vec1",
+        values: [0.1, 0.2, 0.3, 0.4],
+        metadata: {
+          genre: "drama",
+        },
+      },
+      {
+        id: "vec2",
+        values: [0.1, 0.2, 0.3, 0.4],
+        metadata: {
+          genre: "comedy",
+        },
+      },
+    ],
+    namespace: "example-namespace",
+  },
+});
+Updated 25 days ago Table of Contents
+
+Getting Started
+
+Installation
+Usage
+
+
+
+Reference
+
+init()
+configureIndex()
+createCollection()
+createIndex()
+deleteCollection()
+Types
+deleteIndex()
+Types
+describeCollection()
+describeIndex()
+listCollections
+listIndexes
+Index()
+Index.delete1()
+Index.describeIndexStats()
+Index.fetch()
+Index.query()
+Index.update()
+Index.upsert()
+
+
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+
+
+
+
+
+acreom | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersHow-toIntegrationsacreomAirbyte JSONAirtableAlibaba Cloud MaxComputeApify DatasetArxivAWS S3 DirectoryAWS S3 FileAZLyricsAzure Blob Storage ContainerAzure Blob Storage FileBibTeXBiliBiliBlackboardBlockchainBrave Searchchatgpt_loaderCollege ConfidentialConfluenceCoNLL-UCopy PasteCSVCube Semantic LayerDatadog LogsDiffbotDiscordDocugamiDuckDBEmailEmbaasEPubEverNoteexample_dataMicrosoft ExcelFacebook ChatFaunaFigmaGitGitBookGitHubGoogle BigQueryGoogle Cloud Storage DirectoryGoogle Cloud Storage FileGoogle DriveGrobidGutenbergHacker NewsHuggingFace datasetiFixitImagesImage captionsIMSDbIuguJoplinJupyter NotebookLarkSuite (FeiShu)MastodonMediaWikiDumpMergeDocLoadermhtmlMicrosoft OneDriveMicrosoft PowerPointMicrosoft WordModern TreasuryNotion DB 1/2Notion DB 2/2ObsidianOpen Document Format (ODT)Open City DataOrg-modePandas DataFramePsychicPySpark DataFrame LoaderReadTheDocs DocumentationRecursive URL LoaderRedditRoamRSTSitemapSlackSnowflakeSource CodeSpreedlyStripeSubtitleTelegramTencent COS DirectoryTencent COS File2MarkdownTOMLTrelloTSVTwitterUnstructured FileURLWeatherWebBaseLoaderWhatsApp ChatWikipediaXMLXorbits Pandas DataFrameLoading documents from a YouTube urlYouTube transcriptsDocument transformersText embedding modelsVector storesRetrieversChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionDocument loadersIntegrationsacreomacreomacreom is a dev-first knowledge base with tasks running on local markdown files.Below is an example on how to load a local acreom vault into Langchain. As the local vault in acreom is a folder of plain text .md files, the loader requires the path to the directory. Vault files may contain some metadata which is stored as a YAML header. These values will be added to the document’s metadata if collect_metadata is set to true. from langchain.document_loaders import AcreomLoaderloader = AcreomLoader("<path-to-acreom-vault>", collect_metadata=False)docs = loader.load()PreviousPDFNextAirbyte JSONCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

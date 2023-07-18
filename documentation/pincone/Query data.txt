@@ -1,0 +1,413 @@
+Query data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityQuery dataSuggest EditsAfter your data is indexed, you can start sending queries to Pinecone.
+The Query operation searches the index using a query vector. It retrieves the IDs of the most similar vectors in the index, along with their similarity scores. It can optionally include the result vectors' values and metadata too. You specify the number of vectors to retrieve each time you send a query. They are always ordered by similarity from most similar to least similar.
+Sending a query
+When you send a query, you provide a vector and retrieve the top-k most similar vectors for each query. For example, this example sends a query vector and retrieves three matching vectors:
+PythonJavaScriptcurlindex.query(
+  vector=[0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3],
+  top_k=3,
+  include_values=True
+)
+
+# Returns:
+# {'matches': [{'id': 'C',
+#               'score': -1.76717265e-07,
+#               'values': [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3]},
+#                   {'id': 'B',
+#                    'score': 0.080000028,
+#                    'values': [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]},
+#                   {'id': 'D',
+#                    'score': 0.0800001323,
+#                    'values': [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]}],
+#               'namespace': ''}
+const index = pinecone.index("example-index");
+const queryResponse = await Index.query({
+  query: {
+    vector: [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3],
+    topK: 3,
+    includeValues: true,
+  },
+  namespace: "example-namespace",
+});
+// Returns:
+// {'matches': [{'id': 'C',
+//               'score': -1.76717265e-07,
+//               'values': [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3]},
+//                   {'id': 'B',
+//                    'score': 0.080000028,
+//                    'values': [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]},
+//                   {'id': 'D',
+//                    'score': 0.0800001323,
+//                    'values': [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]}],
+//               'namespace': ''}
+curl -i -X POST https://hello-pinecone-YOUR_PROJECT.svc.YOUR_ENVIRONMENT.pinecone.io/query \
+  -H 'Api-Key: YOUR_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "vector":[0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3],
+    "topK": 3,
+    "includeValues": true
+  }'
+
+# Output:
+# {
+#  "matches":[
+#      {
+#       "id": "C",
+#       "score": -1.76717265e-07,
+#       "values": [0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3]
+#      },
+#      {
+#       "id": "B",
+#       "score": 0.080000028,
+#       "values": [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]
+#      },
+#      {
+#       "id": "D",
+#       "score": 0.0800001323,
+#       "values": [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]
+#      }
+#  ],
+#  "namespace": ""
+# }
+
+Depending on your data and your query, you may not get top_k results. This happens when top_k is larger than the number of possible matching vectors for your query.
+Querying by namespace
+You can organize the vectors added to an index into partitions, or "namespaces," to limit queries and other vector operations to only one such namespace at a time. For more information, see: Namespaces.
+Using metadata filters in queries
+You can add metadata to document embeddings within Pinecone, and then filter for those criteria when sending the query. Pinecone will search for similar vector embeddings only among those items that match the filter. For more information, see: Metadata Filtering.
+PythonJavaScriptcurlindex.query(
+    vector=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+    filter={
+        "genre": {"$eq": "documentary"},
+        "year": 2019
+    },
+    top_k=1,
+    include_metadata=True
+)
+const index = pinecone.index("example-index")
+const queryResponse = await index.query({
+  query: {
+    vector: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+    topK: 1,
+    includeMetadata: true
+    filters: {
+      "genre": {"$eq": "documentary"}
+    },
+  }
+})
+
+curl -i -X POST https://YOUR_INDEX-YOUR_PROJECT.svc.YOUR_ENVIRONMENT.pinecone.io/query \
+  -H 'Api-Key: YOUR_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "vector": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+    "filter": {"genre": {"$in": ["comedy", "documentary", "drama"]}},
+    "topK": 1,
+    "includeMetadata": true
+  }'
+
+Querying vectors with sparse and dense values
+When querying an index containing sparse and dense vectors, use the query() operation with the sparse_vector parameter present.
+⚠️WarningThe Update operation does not validate the existence of ids within an
+index. If a non-existent id is given then no changes are made and a 200 OK
+will be returned.
+Examples
+The following example queries the index example-index with a sparse-dense vector.
+Pythoncurlquery_response = index.query(
+    namespace="example-namespace",
+    top_k=10,
+    vector=[0.1, 0.2, 0.3, 0.4],
+    sparse_vector={
+        'indices': [10, 45, 16],
+        'values':  [0.5, 0.5, 0.2]
+    }
+)
+curl --request POST \
+     --url https://index_name-project_id.svc.environment.pinecone.io/query \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+     "includeValues": "false",
+     "includeMetadata": "false",
+     "vector": [
+          0.1,
+          0.2,
+          0.3,
+          0.4
+     ],
+     "sparseVector": {
+          "indices": [
+               10,
+               45,
+               16
+          ],
+          "values": [
+               0.5,
+               0.5,
+               0.2
+          ]
+     },
+     "topK": 10,
+     "namespace": "example-namespace"
+}
+'
+
+Limitations
+Avoid returning vector data and metadata when top_k is greater than 1000. This means queries with top_k over 1000 should not contain include_metadata=True or include_data=True. For more limitations, see: Limits.Updated 11 days ago Table of Contents
+Sending a query
+Querying by namespace
+Using metadata filters in queries
+Querying vectors with sparse and dense values
+Limitations
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

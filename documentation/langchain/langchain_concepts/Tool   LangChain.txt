@@ -1,0 +1,15 @@
+
+
+
+
+
+Tool | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsPromptsIndexesMemoryChainsAgentsToolToolkitAgentAgent ExecutorUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsAgentsToolToolinfoPython GuideJS GuideA specific abstraction around a function that makes it easy for a language model to interact with it. Specificlaly, the interface of a tool has a single text input and a single text output.PreviousAgentsNextToolkitCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

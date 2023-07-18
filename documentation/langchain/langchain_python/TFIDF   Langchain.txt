@@ -1,0 +1,15 @@
+
+
+
+
+
+TF-IDF | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionDocument loadersDocument transformersText embedding modelsVector storesRetrieversHow-toIntegrationsAmazon KendraArxivAzure Cognitive SearchChaindeskChatGPT PluginCohere RerankerDocArray RetrieverElasticSearch BM25kNNLOTR (Merger Retriever)MetalPinecone Hybrid SearchPubMedSVMTF-IDFVespaWeaviate Hybrid SearchWikipediaZepChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesData connectionRetrieversIntegrationsTF-IDFOn this pageTF-IDFTF-IDF means term-frequency times inverse document-frequency.This notebook goes over how to use a retriever that under the hood uses TF-IDF using scikit-learn package.For more information on the details of TF-IDF see this blog post.# !pip install scikit-learnfrom langchain.retrievers import TFIDFRetrieverCreate New Retriever with Texts​retriever = TFIDFRetriever.from_texts(["foo", "bar", "world", "hello", "foo bar"])Create a New Retriever with Documents​You can now create a new retriever with the documents you created.from langchain.schema import Documentretriever = TFIDFRetriever.from_documents(    [        Document(page_content="foo"),        Document(page_content="bar"),        Document(page_content="world"),        Document(page_content="hello"),        Document(page_content="foo bar"),    ])Use Retriever​We can now use the retriever!result = retriever.get_relevant_documents("foo")result    [Document(page_content='foo', metadata={}),     Document(page_content='foo bar', metadata={}),     Document(page_content='hello', metadata={}),     Document(page_content='world', metadata={})]PreviousSVMNextVespaCreate New Retriever with TextsCreate a New Retriever with DocumentsUse RetrieverCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

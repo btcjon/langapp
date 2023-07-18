@@ -1,0 +1,893 @@
+Ecommerce Hybrid Search
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityEcommerce Hybrid SearchSuggest Edits  
+Hybrid Search for E-Commerce with Pinecone
+Hybrid vector search is combination of traditional keyword search and modern dense vector search. It has emerged as a powerful tool for e-commerce companies looking to improve the search experience for their customers.
+By combining the strengths of traditional text-based search algorithms with the visual recognition capabilities of deep learning models, hybrid vector search allows users to search for products using a combination of text and images. This can be especially useful for product searches, where customers may not know the exact name or details of the item they are looking for.
+Pinecone's new sparse-dense index allows you to seamlessly perform hybrid search for e-commerce or in any other context. This notebook demonstrates how to use the new hybrid search feature to improve e-commerce search.
+Install Dependencies
+First, let's import the necessary libraries
+Python!pip install -qU datasets transformers sentence-transformers pinecone-client[grpc]
+
+Connect to Pinecone
+Let's initiate a connection and create an index. For this, we need a free API key, and then we initialize the connection like so:
+Pythonimport pinecone
+
+# init connection to pinecone
+pinecone.init(
+    api_key='YOUR_API_KEY',  # app.pinecone.io
+    environment='YOUR_ENV'  # find next to api key
+)
+
+To use the sparse-dense index in Pinecone we must set metric="dotproduct" and use either s1 or p1 pods. We also align the dimension value to that of our retrieval model, which outputs 512-dimensional vectors.
+Python# choose a name for your index
+index_name = "hybrid-image-search"
+
+if index_name not in pinecone.list_indexes():
+    # create the index
+    pinecone.create_index(
+      index_name,
+      dimension=512,
+      metric="dotproduct",
+      pod_type="s1"
+    )
+
+Now we have created the sparse-dense enabled index, we connect to it:
+Pythonindex = pinecone.GRPCIndex(index_name)
+
+Note: we are using GRPCIndex rather than Index for the improved upsert speeds, either can be used with the sparse-dense index.
+Load Dataset
+We will work with a subset of the Open Fashion Product Images dataset, consisting of ~44K fashion products with images and category labels describing the products. The dataset can be loaded from the Huggigface Datasets hub as follows:
+Pythonfrom datasets import load_dataset
+
+# load the dataset from huggingface datasets hub
+fashion = load_dataset(
+    "ashraq/fashion-product-images-small",
+    split="train"
+)
+fashion
+
+Dataset({
+    features: ['id', 'gender', 'masterCategory', 'subCategory', 'articleType', 'baseColour', 'season', 'year', 'usage', 'productDisplayName', 'image'],
+    num_rows: 44072
+})
+
+We will first assign the images and metadata into separate variables and then convert the metadata into a pandas dataframe.
+Python# assign the images and metadata to separate variables
+images = fashion["image"]
+metadata = fashion.remove_columns("image")
+
+Python# display a product image
+images[900]
+
+
+Python# convert metadata into a pandas dataframe
+metadata = metadata.to_pandas()
+metadata.head()
+
+
+
+
+
+
+
+
+
+id
+gender
+masterCategory
+subCategory
+articleType
+baseColour
+season
+year
+usage
+productDisplayName
+
+
+
+
+0
+15970
+Men
+Apparel
+Topwear
+Shirts
+Navy Blue
+Fall
+2011.0
+Casual
+Turtle Check Men Navy Blue Shirt
+
+
+1
+39386
+Men
+Apparel
+Bottomwear
+Jeans
+Blue
+Summer
+2012.0
+Casual
+Peter England Men Party Blue Jeans
+
+
+2
+59263
+Women
+Accessories
+Watches
+Watches
+Silver
+Winter
+2016.0
+Casual
+Titan Women Silver Watch
+
+
+3
+21379
+Men
+Apparel
+Bottomwear
+Track Pants
+Black
+Fall
+2011.0
+Casual
+Manchester United Men Solid Black Track Pants
+
+
+4
+53759
+Men
+Apparel
+Topwear
+Tshirts
+Grey
+Summer
+2012.0
+Casual
+Puma Men Grey T-shirt
+
+
+
+
+
+
+
+We need both sparse and dense vectors to perform hybrid search. We will use all the metadata fields except for the id and year to create sparse vectors and the product images to create dense vectors.
+Sparse Vectors
+To create the sparse vectors we'll use BM25.
+⚠️WarningFor now we'll implement BM25 using a temporary helper function. This will be updated with a more permanent solution in the near future.
+Pythonimport requests
+
+with open('pinecone_text.py' ,'w') as fb:
+    fb.write(requests.get('https://storage.googleapis.com/gareth-pinecone-datasets/pinecone_text.py').text)
+
+The above helper function requires that we pass a tokenizer that will handle the splitting of text into tokens before building the BM25 vectors.
+We will use a bert-base-uncased tokenizer from Hugging Face tokenizers:
+Pythonfrom transformers import BertTokenizerFast
+import pinecone_text
+
+# load bert tokenizer from huggingface
+tokenizer = BertTokenizerFast.from_pretrained(
+    'bert-base-uncased'
+)
+
+def tokenize_func(text):
+    token_ids = tokenizer(
+        text,
+        add_special_tokens=False
+    )['input_ids']
+    return tokenizer.convert_ids_to_tokens(token_ids)
+
+bm25 = pinecone_text.BM25(tokenize_func)
+
+Pythontokenize_func('Turtle Check Men Navy Blue Shirt')
+
+['turtle', 'check', 'men', 'navy', 'blue', 'shirt']
+
+BM25 requires training on a representative portion of the dataset. We do this like so:
+Pythonbm25.fit(metadata['productDisplayName'])
+
+BM25(avgdl=7.983640406607369,
+     doc_freq=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+               30.0, 9.0, 2.0, 0.0, ...],
+     ndocs=44072)
+
+Let's create a test sparse vector using a productDisplayName.
+Pythonmetadata['productDisplayName'][0]
+
+'Turtle Check Men Navy Blue Shirt'
+
+Pythonbm25.transform_query(metadata['productDisplayName'][0])
+
+{'indices': [3837, 7163, 19944, 29471, 32256, 55104],
+ 'values': [0.11231091182274018,
+  0.33966052569334826,
+  0.10380364782761624,
+  0.21489054354050624,
+  0.04188327394634689,
+  0.18745109716944222]}
+
+And for the stored docs, we only need the "IDF" part:
+Pythonbm25.transform_doc(metadata['productDisplayName'][0])
+
+{'indices': [3837, 7163, 19944, 29471, 32256, 55104],
+ 'values': [0.4344342631341496,
+  0.4344342631341496,
+  0.4344342631341496,
+  0.4344342631341496,
+  0.4344342631341496,
+  0.4344342631341496]}
+
+Dense Vectors
+We will use the CLIP to generate dense vectors for product images. We can directly pass PIL images to CLIP as it can encode both images and texts. We can load CLIP like so:
+Pythonfrom sentence_transformers import SentenceTransformer
+import torch
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+# load a CLIP model from huggingface
+model = SentenceTransformer(
+    'sentence-transformers/clip-ViT-B-32',
+    device=device
+)
+model
+
+SentenceTransformer(
+  (0): CLIPModel()
+)
+
+Pythondense_vec = model.encode([metadata['productDisplayName'][0]])
+dense_vec.shape
+
+(1, 512)
+
+The model gives us a 512 dimensional dense vector.
+Upsert Documents
+Now we can go ahead and generate sparse and dense vectors for the full dataset and upsert them along with the metadata to the new hybrid index. We can do that easily as follows:
+Pythonfrom tqdm.auto import tqdm
+
+batch_size = 200
+
+for i in tqdm(range(0, len(fashion), batch_size)):
+    # find end of batch
+    i_end = min(i+batch_size, len(fashion))
+    # extract metadata batch
+    meta_batch = metadata.iloc[i:i_end]
+    meta_dict = meta_batch.to_dict(orient="records")
+    # concatinate all metadata field except for id and year to form a single string
+    meta_batch = [" ".join(x) for x in meta_batch.loc[:, ~meta_batch.columns.isin(['id', 'year'])].values.tolist()]
+    # extract image batch
+    img_batch = images[i:i_end]
+    # create sparse BM25 vectors
+    sparse_embeds = [bm25.transform_doc(text) for text in meta_batch]
+    # create dense vectors
+    dense_embeds = model.encode(img_batch).tolist()
+    # create unique IDs
+    ids = [str(x) for x in range(i, i_end)]
+
+    upserts = []
+    # loop through the data and create dictionaries for uploading documents to pinecone index
+    for _id, sparse, dense, meta in zip(ids, sparse_embeds, dense_embeds, meta_dict):
+        upserts.append({
+            'id': _id,
+            'sparse_values': sparse,
+            'values': dense,
+            'metadata': meta
+        })
+    # upload the documents to the new hybrid index
+    index.upsert(upserts)
+
+# show index description after uploading the documents
+index.describe_index_stats()
+
+Querying
+Now we can query the index, providing the sparse and dense vectors. We do this directly with an equal weighting between sparse and dense like so:
+Pythonquery = "dark blue french connection jeans for men"
+
+# create sparse and dense vectors
+sparse = bm25.transform_query(query)
+dense = model.encode(query).tolist()
+# search
+result = index.query(
+    top_k=14,
+    vector=dense,
+    sparse_vector=sparse,
+    include_metadata=True
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+imgs
+
+[<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFC46B4610>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFAB8FECA0>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFA6D774F0>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFA4E46970>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFA428DF70>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFABA41880>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFA4C79310>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFA6E02730>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FC0522358B0>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFC4A00880>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFA6FDA190>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFC41FBBE0>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFC48A9B20>,
+ <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=60x80 at 0x7FBFAABB1AF0>]
+
+We return a list of PIL image objects, to view them we will define a function called display_result.
+Pythonfrom IPython.core.display import HTML
+from io import BytesIO
+from base64 import b64encode
+
+# function to display product images
+def display_result(image_batch):
+    figures = []
+    for img in image_batch:
+        b = BytesIO()  
+        img.save(b, format='png')
+        figures.append(f'''
+            <figure style="margin: 5px !important;">
+              <img src="data:image/png;base64,{b64encode(b.getvalue()).decode('utf-8')}" style="width: 90px; height: 120px" >
+            </figure>
+        ''')
+    return HTML(data=f'''
+        <div style="display: flex; flex-flow: row wrap; text-align: center;">
+        {''.join(figures)}
+        </div>
+    ''')
+
+And now we can view them:
+Pythondisplay_result(imgs)
+
+
+It's possible to prioritize our search based on sparse vs. dense vector results. To do so, we scale the vectors, for this we'll use a function named hybrid_scale.
+Pythondef hybrid_scale(dense, sparse, alpha: float):
+    """Hybrid vector scaling using a convex combination
+
+    alpha * dense + (1 - alpha) * sparse
+
+    Args:
+        dense: Array of floats representing
+        sparse: a dict of `indices` and `values`
+        alpha: float between 0 and 1 where 0 == sparse only
+               and 1 == dense only
+    """
+    if alpha < 0 or alpha > 1:
+        raise ValueError("Alpha must be between 0 and 1")
+    # scale sparse and dense vectors to create hybrid search vecs
+    hsparse = {
+        'indices': sparse['indices'],
+        'values':  [v * (1 - alpha) for v in sparse['values']]
+    }
+    hdense = [v * alpha for v in dense]
+    return hdense, hsparse
+
+First, we will do a pure sparse vector search by setting the alpha value as 0.
+Pythonquestion = "dark blue french connection jeans for men"
+
+# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=0)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+Let's take a look at the description of the result.
+Pythonfor x in result["matches"]:
+    print(x["metadata"]['productDisplayName'])
+
+French Connection Men Blue Jeans
+French Connection Men Blue Jeans
+French Connection Men Blue Jeans
+French Connection Men Blue Jeans
+French Connection Men Blue Jeans
+French Connection Men Blue Jeans
+French Connection Women Blue Jeans
+French Connection Women Blue Jeans
+French Connection Men Navy Blue Jeans
+French Connection Men Black Jeans
+French Connection Men Grey Jeans
+French Connection Men Black Jeans
+French Connection Men Black Jeans
+French Connection Men Black Jeans
+
+We can observe that the keyword search returned French Connection jeans but failed to rank the men's French Connection jeans higher than a few of the women's. Now let's do a pure semantic image search by setting the alpha value to 1.
+Python# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=1)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+Pythonfor x in result["matches"]:
+    print(x["metadata"]['productDisplayName'])
+
+Locomotive Men Radley Blue Jeans
+Locomotive Men Race Blue Jeans
+Locomotive Men Eero Blue Jeans
+Locomotive Men Cam Blue Jeans
+Locomotive Men Ian Blue Jeans
+French Connection Men Blue Jeans
+Locomotive Men Cael Blue Jeans
+Locomotive Men Lio Blue Jeans
+French Connection Men Blue Jeans
+Locomotive Men Rafe Blue Jeans
+Locomotive Men Barney Grey Jeans
+Spykar Men Actif Fit Low Waist Blue Jeans
+Spykar Men Style Essentials Kns 0542 Blue Jeans
+Wrangler Men Blue Skanders Jeans
+
+The semantic image search correctly returned blue jeans for men, but mostly failed to match the exact brand we are looking for — French Connection. Now let's set the alpha value to 0.05 to try a hybrid search that is slightly more dense than sparse search.
+Python# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=0.05)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+Pythonfor x in result["matches"]:
+    print(x["metadata"]['productDisplayName'])
+
+French Connection Men Blue Jeans
+French Connection Men Blue Jeans
+French Connection Men Blue Jeans
+Locomotive Men Radley Blue Jeans
+French Connection Men Navy Blue Jeans
+Locomotive Men Race Blue Jeans
+Locomotive Men Cam Blue Jeans
+Locomotive Men Eero Blue Jeans
+Locomotive Men Ian Blue Jeans
+French Connection Men Blue Jeans
+French Connection Men Blue paint Stained Regular Fit Jeans
+Locomotive Men Cael Blue Jeans
+Locomotive Men Lio Blue Jeans
+French Connection Men Blue Jeans
+
+By performing a mostly sparse search with some help from our image-based dense vectors, we get a strong number of French Connection jeans, that are for men, and visually are almost all aligned to blue jeans.
+Let's try more queries.
+Pythonquery = "small beige handbag for women"
+# create sparse and dense vectors
+sparse = bm25.transform_query(query)
+dense = model.encode(query).tolist()
+# scale sparse and dense vectors - keyword search first
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=0)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+We get a lot of small handbags for women, but they're not beige. Let's use the image dense vectors to weigh the colors higher.
+Python# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=0.05)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+Pythonfor x in result["matches"]:
+    print(x["metadata"]['productDisplayName'])
+
+Rocky S Women Beige Handbag
+Kiara Women Beige Handbag
+Baggit Women Beige Handbag
+Lino Perros Women Beige Handbag
+Kiara Women Beige Handbag
+Kiara Women Beige Handbag
+French Connection Women Beige Handbag
+Rocia Women Beige Handbag
+Murcia Women Beige Handbag
+Baggit Women Beige Handbag
+French Connection Women Beige Handbag
+Murcia Women Mauve Handbag
+Baggit Women Beige Handbag
+Baggit Women Beige Handbag
+
+Here we see better aligned handbags.
+Python# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=1)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+If we go too far with dense vectors, we start to see a few purses, rather than handbags.
+Let's run some more interesting queries. This time we will use a product image to create our dense vector, we'll provide a text query as before that will be used to create the sparse vector, and then we'll select a specific color as per the metadata attached to each image, with metadata filtering.
+Pythonimages[36254]
+
+
+Pythonquery = "soft purple topwear"
+# create the sparse vector
+sparse = bm25.transform_query(query)
+# now create the dense vector using the image
+dense = model.encode(images[36254]).tolist()
+# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=0.3)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True
+)
+# use returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+Our "purple" component isn't being considered strongly enough, let's add this to the metadata filtering:
+Pythonquery = "soft purple topwear"
+# create the sparse vector
+sparse = bm25.transform_query(query)
+# now create the dense vector using the image
+dense = model.encode(images[36254]).tolist()
+# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=0.3)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True,
+    filter={"baseColour": "Purple"}  # add to metadata filter
+)
+# used returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+Let's try with another image:
+Pythonimages[36256]
+
+
+Pythonquery = "soft green color topwear"
+# create the sparse vector
+sparse = bm25.transform_query(query)
+# now create the dense vector using the image
+dense = model.encode(images[36256]).tolist()
+# scale sparse and dense vectors
+hdense, hsparse = hybrid_scale(dense, sparse, alpha=0.6)
+# search
+result = index.query(
+    top_k=14,
+    vector=hdense,
+    sparse_vector=hsparse,
+    include_metadata=True,
+    filter={"baseColour": "Green"}  # add to metadata filter
+)
+# use returned product ids to get images
+imgs = [images[int(r["id"])] for r in result["matches"]]
+# display the images
+display_result(imgs)
+
+
+Here we did not specify the gender but the search results are accurate and we got products matching our query image and description.
+Delete the Index
+If you're done with the index, we delete it to save resources.
+Pythonpinecone.delete_index(index_name)
+
+Updated 13 days ago Table of Contents
+
+Hybrid Search for E-Commerce with Pinecone
+
+Install Dependencies
+Connect to Pinecone
+
+
+
+Load Dataset
+
+Sparse Vectors
+Dense Vectors
+Upsert Documents
+Querying
+
+
+
+Delete the Index
+
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+
+
+
+
+
+Chatbots | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsPromptsIndexesMemoryChainsAgentsUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationUse CasesChatbotsChatbotsinfoPython GuideChatGPT took the world by storm by exposing a powerful language model with a new interface - chat. There are several components that go into building a chatbot.The model - you can construct a chatbot from a normal language model or a Chat Model. The important thing to remember is that even if you are using a Chat Model, the API itself is stateless, meaning it won't remember previous interactions - you have to pass them in.PromptTemplate - this will guide how your chatbot acts. Are they sassy? Helpful? These can be used to give your chatbot some character.Memory - as mentioned above, the models themselves are stateless. Memory brings some concept of state to the table, allowing it remember previous interactionsChatbots are often very powerful and more differentiated when combined with other sources of data. The same techniques that underpin "Question Answering Over Docs" can also be used here to give your chatbot access to that data.PreviousQuestion Answering Over DocsNextQuerying Tabular DataCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

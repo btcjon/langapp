@@ -1,0 +1,15 @@
+
+
+
+
+
+Postgres Chat Message History | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsMemoryHow-toIntegrationsCassandra Chat Message HistoryDynamodb Chat Message HistoryEntity Memory with SQLite storageMomento Chat Message HistoryMongodb Chat Message HistoryMotörhead MemoryMotörhead Memory (Managed)Postgres Chat Message HistoryRedis Chat Message HistoryZep MemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesMemoryIntegrationsPostgres Chat Message HistoryPostgres Chat Message HistoryThis notebook goes over how to use Postgres to store chat message history.from langchain.memory import PostgresChatMessageHistoryhistory = PostgresChatMessageHistory(    connection_string="postgresql://postgres:mypassword@localhost/chat_history",    session_id="foo",)history.add_user_message("hi!")history.add_ai_message("whats up?")history.messagesPreviousMotörhead Memory (Managed)NextRedis Chat Message HistoryCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

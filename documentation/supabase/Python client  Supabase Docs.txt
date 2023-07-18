@@ -1,0 +1,22 @@
+Python client | Supabase DocsDOCSHomeGetting StartedDatabaseServerless APIsAuthEdge FunctionsRealtimeStorageAI & VectorsPlatformResourcesSelf-HostingIntegrationsClient Library ReferenceJavaScriptFlutterPythonCommunityC#CommunitySwiftCommunityKotlinCommunityTools referenceManagement APISupabase CLIStatusDOCSSearch docs...KSupabase.comDashboardHomeAI QuickstartsPython clientManage unstructured vector stores in PostgreSQL.Supabase provides a Python client called vecs for managing unstructured vector stores. This client provides a set of useful tools for creating and querying collections in PostgreSQL using the pgvector extension.
+Quick start#
+Let's see how Vecs works using a local database. Make sure you have the Supabase CLI installed on your machine.
+Initialize your project#
+Start a local Postgres instance in any folder using the init and start commands. Make sure you have Docker running!
+_10# Initialize your project_10supabase init_10_10# Start Postgres_10supabase start
+Create a collection#
+Inside a Python shell, run the following commands to create a new collection called "docs", with 3 dimensions.
+_10import vecs_10_10# create vector store client_10vx = vecs.create_client("postgresql://postgres:postgres@localhost:54322/postgres")_10_10# create a collection of vectors with 3 dimensions_10docs = vx.create_collection(name="docs", dimension=3)
+Add embeddings#
+Now we can insert some embeddings into our "docs" collection using the upsert() command:
+_13import vecs_13_13# create vector store client_13docs = vecs.get_collection(name="docs")_13_13# a collection of vectors with 3 dimensions_13vectors=[_13  ("vec0", [0.1, 0.2, 0.3], {"year": 1973}),_13  ("vec1", [0.7, 0.8, 0.9], {"year": 2012})_13]_13_13# insert our vectors_13docs.upsert(vectors=vectors)
+Query the collection#
+You can now query the collection to retrieve a relevant match:
+_10import vecs_10_10docs = vecs.get_collection(name="docs")_10_10# query the collection filtering metadata for "year" = 2012_10docs.query(_10    query_vector=[0.4,0.5,0.6],      # required_10    limit=1,                         # number of records to return_10    filters={"year": {"$eq": 2012}}, # metadata filters_10)
+Deep Dive#
+For a more in-depth guide on vecs collections, see Managing collections.
+Resources#
+
+Official Vecs Documentation: https://supabase.github.io/vecs/api
+Source Code: https://github.com/supabase/vecs
+Edit this page on GitHub Need some help?Contact supportLastest product updates?See ChangelogSomething's not right?Check system status© Supabase Inc—ContributingAuthor StyleguideOpen SourceSupaSquad

@@ -1,0 +1,15 @@
+
+
+
+
+
+Redis Chat Message History | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsMemoryHow-toIntegrationsCassandra Chat Message HistoryDynamodb Chat Message HistoryEntity Memory with SQLite storageMomento Chat Message HistoryMongodb Chat Message HistoryMotörhead MemoryMotörhead Memory (Managed)Postgres Chat Message HistoryRedis Chat Message HistoryZep MemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesMemoryIntegrationsRedis Chat Message HistoryRedis Chat Message HistoryThis notebook goes over how to use Redis to store chat message history.from langchain.memory import RedisChatMessageHistoryhistory = RedisChatMessageHistory("foo")history.add_user_message("hi!")history.add_ai_message("whats up?")history.messages    [AIMessage(content='whats up?', additional_kwargs={}),     HumanMessage(content='hi!', additional_kwargs={})]PreviousPostgres Chat Message HistoryNextZep MemoryCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

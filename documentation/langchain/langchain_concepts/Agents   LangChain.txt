@@ -1,0 +1,18 @@
+
+
+
+
+
+Agents | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaModelsPromptsIndexesMemoryChainsAgentsToolToolkitAgentAgent ExecutorUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsAgentsOn this pageAgentsinfoPython GuideJS GuideSome applications will require not just a predetermined chain of calls to LLMs/other tools,
+but potentially an unknown chain that depends on the user's input.
+In these types of chains, there is a “agent” which has access to a suite of tools.
+Depending on the user input, the agent can then decide which, if any, of these tools to call.We split the documentation into the following sections:ToolsHow language models interact with other resources.AgentsThe language model that drives decision making.ToolkitsSets of tools that when used together can accomplish a specific task.Agent ExecutorThe logic for running agents with tools.Go deeper​📄️ ToolPython Guide📄️ ToolkitPython Guide📄️ AgentPython Guide📄️ Agent ExecutorPython GuidePreviousPrompt SelectorNextToolGo deeperCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

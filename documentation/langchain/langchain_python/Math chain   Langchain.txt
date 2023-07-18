@@ -1,0 +1,15 @@
+
+
+
+
+
+Math chain | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OData connectionChainsHow toFoundationalDocumentsPopularAdditionalAnalyze DocumentSelf-critique chain with constitutional AICausal program-aided language (CPAL) chainExtractionFLAREGraph DB QA chainHugeGraph QA ChainKuzuQAChainNebulaGraphQAChainGraph QAGraphSparqlQAChainHypothetical Document EmbeddingsBash chainSelf-checking chainMath chainHTTP request chainSummarization checker chainLLM Symbolic MathModerationDynamically selecting from multiple promptsDynamically selecting from multiple retrieversRetrieval QA using OpenAI functionsOpenAPI chainOpenAPI calls with OpenAI functionsProgram-aided language model (PAL) chainQuestion-Answering CitationsDocument QATaggingVector store-augmented text generationMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesChainsAdditionalMath chainMath chainThis notebook showcases using LLMs and Python REPLs to do complex word math problems.from langchain import OpenAI, LLMMathChainllm = OpenAI(temperature=0)llm_math = LLMMathChain.from_llm(llm, verbose=True)llm_math.run("What is 13 raised to the .3432 power?")            > Entering new LLMMathChain chain...    What is 13 raised to the .3432 power?    ```text    13 ** .3432    ```    ...numexpr.evaluate("13 ** .3432")...        Answer: 2.4116004626599237    > Finished chain.    'Answer: 2.4116004626599237'PreviousSelf-checking chainNextHTTP request chainCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

@@ -1,0 +1,281 @@
+Troubleshooting
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityTroubleshootingSuggest EditsThis section describes common issues and how to solve them. Need help? Ask your question in our support forum. Standard, Enterprise, and Dedicated customers can also contact support for help.
+Unable to pip install
+Version 3 of Python uses pip3. Use the following commands at the command line (the terminal):
+pip3 install -U pinecone-client
+
+Index is missing after inactivity
+In general, indexes on the Starter (free) plan are archived as collections and deleted after 7 days of inactivity; for indexes created by certain open source projects such as AutoGPT, indexes are archived and deleted after 1 day of inactivity. To prevent this, you can send any API request to Pinecone and the counter will reset.
+Slow uploads or high latencies
+To minimize latency when accessing Pinecone:
+
+Switch to a cloud environment. For example: EC2, GCE, Google Colab, GCP AI Platform Notebook, or SageMaker Notebook. If you experience slow uploads or high query latencies, it might be because you are accessing Pinecone from your home network.
+Consider deploying your application in the same environment as your Pinecone service. For users on the Starter (free) plan, the environment is GCP US-West (Oregon).
+See performance tuning for more tips.
+
+High query latencies with batching
+If you're batching queries, try reducing the number of queries per call to 1 query vector. You can make these calls in parallel and expect roughly the same performance as with batching.
+Upsert throttling when using the gRPC client
+It's possible to get write-throttled sooner when upserting using the gRPC index. If you see this often, then we recommend using a backoff algorithm while upserting.
+Pods are full
+There is a limit to how much vector data a single pod can hold. Create an index with more pods to hold more data. Estimate the right index configuration and scale your index to increase capacity.
+If your metadata has high cardinality, such as having a unique value for every vector in a large index, the index will take up more memory than estimated. This could result in the pods being full sooner than you expected. Consider only indexing metadata to be used for filtering, and storing the rest in a separate key-value store.
+See the Manage Indexes documentation for information on how to specify the number of pods for your index.
+Security concerns
+We work hard to earn and maintain trust by treating security and reliability as a cornerstone of our company and product. Pinecone is SOC 2 Type II compliant and GDPR-ready. See the Trust & Security page for more information. Contact us to report any security concerns.
+CORS errors
+When sending requests to Pinecone, you may receive the following error: 
+consoleNo 'Access-Control-Allow-Origin' header is present on the requested resource.
+
+This error occurs in response to cross-origin requests. Most commonly, it occurs when a user is running a local web server with the hostname 'localhost', which Pinecone's Same Origin Policy (SOP) treats as distinct from the IP address of the local machine.
+To resolve this issue, host your web server on an external server with a public IP address and DNS name entry.Updated 8 days ago Table of Contents
+Unable to pip install
+Index is missing after inactivity
+Slow uploads or high latencies
+High query latencies with batching
+Upsert throttling when using the gRPC client
+Pods are full
+Security concerns
+CORS errors
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

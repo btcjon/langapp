@@ -1,0 +1,267 @@
+Understanding subscription status
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jump to ContentLearnForumSupportSystem StatusContactGuidesAPI ReferenceExamplesLibrariesLearnForumSupportSystem StatusContactLog InSign Up FreeLog InSign Up FreeGuidesAPI ReferenceExamplesLibrariesAIGetting startedOverviewQuickstartExamplesChoosing index type and sizeorganizationsUnderstanding organizationsManaging costUnderstanding costMonitoring your usageManage billingUnderstanding subscription statusChanging your billing planSetting up billing through AWS MarketplaceSetting up billing through GCP MarketplaceprojectsUnderstanding projectsCreate a projectAdd users to projects and organizationsChange project pod limitRename a projectgcp-starter environmentindexesUnderstanding indexesManage indexesScale indexesUnderstanding collectionsBack up indexesUsing namespacesrecordsInsert dataManage dataSparse-dense embeddingsQuery dataFiltering with metadatadatasetsPinecone public datasetsUsing public Pinecone datasetsCreating and loading private datasetsoperationsUnderstanding multitenancyMonitoringPerformance tuningTroubleshootingMoving to productionIntegrationsOpenAICohereHaystackHugging Face Inference EndpointsElasticsearchDatabricksLangChainreferencePython ClientNode.JS ClientLimitsRelease notesLibrariesArchitectureSupportSupport ForumSupport PortalStatusSecurityUnderstanding subscription statusSuggest EditsOverview
+This document describes the different subscription statuses for your Pinecone organization.
+Subscription statuses for accounts with past due payments
+Users on the Standard and Enterprise Plans pay regular payments based on usage. When a payment is past due, Pinecone may restrict your account.
+Past due accounts have one of the following subscription statuses:
+
+Restricted. This organization is now on the Starter Plan and can no longer create new resources. 
+Suspended. The API keys for this organization are no longer valid; calls to the Pinecone API fail.
+Deactivated. Pinecone archives this organization's indexes.
+
+Reinstating a deactivated organization
+If your organization is deactivated, follow these steps to reinstate your subscription and reactivate your indexes:
+
+Pay all past due invoices.
+(For organizations with cloud marketplace billing) Reenable cloud marketplace billing for AWS or GCP.
+In the Pinecone console, change your billing plan back to the desired plan.
+Click API Keys. This view displays your new API keys. 
+Update all queries to use these new keys.
+Recreate your indexes from the collections that contain the backup of your old indexes.
+
+What's next
+
+Learn how to change your billing plan
+Updated 18 days ago Table of Contents
+Overview
+Subscription statuses for accounts with past due payments
+Reinstating a deactivated organization
+What's next
+
+
+
+
+
+Documentation
+
+
+Learning Center
+
+
+Developer Forum
+
+
+Support Center
+
+
+Status Page
+
+
+Careers
+
+
+
+
+© Pinecone Systems, Inc. | San Francisco, CA | Terms | Privacy | Cookies | Trust & Security | System Status
+Pinecone is a registered trademark of Pinecone Systems, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

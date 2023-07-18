@@ -1,0 +1,15 @@
+
+
+
+
+
+Validate template | 🦜️🔗 Langchain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainJS/TS DocsGitHubCTRLKGet startedIntroductionInstallationQuickstartModulesModel I/​OPromptsPrompt templatesConnecting to a Feature StoreCustom prompt templateFew-shot prompt templatesFew shot examples for chat modelsFormat template outputTemplate FormatsTypes of MessagePromptTemplatePartial prompt templatesCompositionSerializationValidate templateExample selectorsLanguage modelsOutput parsersData connectionChainsMemoryAgentsCallbacksModulesUse casesGuidesEcosystemAdditional resourcesAPI referenceModulesModel I/​OPromptsPrompt templatesValidate templateValidate templateBy default, PromptTemplate will validate the template string by checking whether the input_variables match the variables defined in template. You can disable this behavior by setting validate_template to Falsetemplate = "I am learning langchain because {reason}."prompt_template = PromptTemplate(template=template,                                 input_variables=["reason", "foo"]) # ValueError due to extra variablesprompt_template = PromptTemplate(template=template,                                 input_variables=["reason", "foo"],                                 validate_template=False) # No errorPreviousSerializationNextExample selectorsCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+

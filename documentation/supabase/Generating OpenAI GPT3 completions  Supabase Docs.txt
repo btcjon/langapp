@@ -1,0 +1,29 @@
+Generating OpenAI GPT3 completions | Supabase DocsDOCSHomeGetting StartedDatabaseServerless APIsAuthEdge FunctionsRealtimeStorageAI & VectorsPlatformResourcesSelf-HostingIntegrationsClient Library ReferenceJavaScriptFlutterPythonCommunityC#CommunitySwiftCommunityKotlinCommunityTools referenceManagement APISupabase CLIStatusDOCSSearch docs...KSupabase.comDashboardHomeGenerating OpenAI GPT3 completionsGenerate GPT text completions using OpenAI and Supabase Edge Functions.OpenAI provides a completions API that allows you to use their generative GPT models in your own applications.
+OpenAI's API is intended to be used from the server-side. Supabase offers Edge Functions to make it easy to interact with third party APIs like OpenAI.
+Setup Supabase project#
+If you haven't already, install the Supabase CLI and initialize your project:
+_10supabase init
+Create edge function#
+Scaffold a new edge function called openai by running:
+_10supabase functions new openai
+A new edge function will now exist under ./supabase/functions/openai/index.ts.
+We'll design the function to take your user's query (via POST request) and forward it to OpenAI's API.
+index.ts_24import 'xhr_polyfill'_24import { serve } from 'std/server'_24import { CreateCompletionRequest } from 'openai'_24_24serve(async (req) => {_24  const { query } = await req.json()_24_24  const completionConfig: CreateCompletionRequest = {_24    model: 'text-davinci-003',_24    prompt: query,_24    max_tokens: 256,_24    temperature: 0,_24    stream: false,_24  }_24_24  return fetch('https://api.openai.com/v1/completions', {_24    method: 'POST',_24    headers: {_24      Authorization: `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,_24      'Content-Type': 'application/json',_24    },_24    body: JSON.stringify(completionConfig),_24  })_24})
+Note that we are setting stream to false which will wait until the entire response is complete before returning. If you wish to stream GPT's response word-by-word back to your client, set stream to true.
+Create OpenAI key#
+You may have noticed we were passing OPENAI_API_KEY in the Authorization header to OpenAI. To generate this key, go to https://platform.openai.com/account/api-keys and create a new secret key.
+After getting the key, copy it into a new file called .env.local in your ./supabase folder:
+_10OPENAI_API_KEY=your-key-here
+Run locally#
+Serve the edge function locally by running:
+_10supabase functions serve --env-file ./supabase/.env.local --no-verify-jwt
+Notice how we are passing in the .env.local file.
+Use cURL or Postman to make a POST request to http://localhost:54321/functions/v1/openai.
+_10curl -i --location --request POST http://localhost:54321/functions/v1/openai \_10  --header 'Content-Type: application/json' \_10  --data '{"query":"What is Supabase?"}'
+You should see a GPT response come back from OpenAI!
+Deploy#
+Deploy your function to the cloud by runnning:
+_10supabase functions deploy --no-verify-jwt openai_10supabase secrets set --env-file ./supabase/.env.local
+Go deeper#
+If you're interesting in learning how to use this to build your own ChatGPT, read the blog post and check out the video:
+Edit this page on GitHub Need some help?Contact supportLastest product updates?See ChangelogSomething's not right?Check system status© Supabase Inc—ContributingAuthor StyleguideOpen SourceSupaSquad

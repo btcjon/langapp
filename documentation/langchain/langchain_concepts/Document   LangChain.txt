@@ -1,0 +1,15 @@
+
+
+
+
+
+Document | 🦜️🔗 LangChain
+
+
+
+
+
+Skip to main content🦜️🔗 LangChainConceptsPython DocsJS/TS DocsIntroductionComponentsSchemaTextChatMessagesExamplesDocumentModelsPromptsIndexesMemoryChainsAgentsUse CasesPersonal AssistantsQuestion Answering Over DocsChatbotsQuerying Tabular DataInteracting with APIsExtractionEvaluationSummarizationComponentsSchemaDocumentDocumentA piece of unstructured data. Consists of page_content (the content of the data) and metadata (auxiliary pieces of information describing attributes of the data).PreviousExamplesNextModelsCommunityDiscordTwitterGitHubPythonJS/TSMoreHomepageBlogCopyright © 2023 LangChain, Inc.
+
+
+
