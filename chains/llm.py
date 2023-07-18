@@ -8,9 +8,12 @@ class LLM:
         pass
 
     def chat(self, messages):
+        self.memory.store(messages[0]["role"], messages[0]["content"])
+        messages = self.memory.retrieve()
         messages.insert(0, {"role": "system", "content": "You are a helpful assistant."})
         response = openai.ChatCompletion.create(
           model=self.model_name,
           messages=messages
         )
+        self.memory.store("ai", response.choices[0].message['content'])
         return response.choices[0].message['content']
