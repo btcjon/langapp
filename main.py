@@ -11,7 +11,7 @@ load_dotenv()
 # Initialize OpenAI API with your key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 
 class LangchainCLI(cmd.Cmd):
     prompt = 'You: '
@@ -23,7 +23,7 @@ class LangchainCLI(cmd.Cmd):
         self.llm_gpt35turbo16k = LLM("gpt-3.5-turbo-16k")
         self.llm_gpt35turbo = LLM("gpt-3.5-turbo")
         self.current_llm = self.llm_gpt35turbo
-        self.memory = ConversationBufferMemory(memory_key="chat_history")
+        self.memory = ConversationBufferWindowMemory(k=5, memory_key="chat_history")
         print("Hello, welcome to Langchain!")
         print("The default language model is gpt-3.5-turbo.")
         print("You can change the language model using the 'select_model' command.")
