@@ -33,7 +33,7 @@ class LangchainCLI(cmd.Cmd):
 
     def do_chat(self, args):
         self.memory.store("user", args)
-        response = self.current_llm.chat(self.memory.retrieve())
+        response = self.current_llm.chat([self.memory.retrieve()])
         self.memory.store("assistant", response)
         print(response)
 
