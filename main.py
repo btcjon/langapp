@@ -32,9 +32,7 @@ class LangchainCLI(cmd.Cmd):
         self.do_chat('')
 
     def do_chat(self, args):
-        self.memory.store("user", args)
-        response = self.current_llm.chat([self.memory.retrieve()])
-        self.memory.store("assistant", response)
+        response = self.current_llm.chat([{"role": "user", "content": args}])
         print(response)
 
     def do_greet(self, line):
@@ -54,7 +52,7 @@ class LangchainCLI(cmd.Cmd):
             print("Invalid model name")
 
     def do_chat(self, args):
-        response = self.current_llm.chat(args)
+        response = self.current_llm.chat([args])
         print(response)
 
     def default(self, line):
