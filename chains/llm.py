@@ -1,22 +1,26 @@
 import openai
-
-import memory.short_term.memory as mem
+from typing import List, Dict, Optional
+from memory.memory import Memory, LongTermMemory
 
 class LLM:
-    def __init__(self, model_name):
-        self.model_name = model_name
-        self.memory = mem.Memory()
+    def __init__(self, model: str):
+        self.model = model
 
-    def execute(self):
-        pass
+    def chat(self, messages: List[Dict[str, str]], memory: Optional[Memory] = None, long_term_memory: Optional[LongTermMemory] = None):
+        if memory is not None:
+            messages = memory.recall(messages)
+        if long_term_memory is not None:
+            messages = long_term_memory.recall(messages)
 
-    def chat(self, messages):
-        self.memory.store(messages[0]["role"], messages[0]["content"])
-        messages = self.memory.retrieve()
-        messages.insert(0, {"role": "system", "content": "You are a helpful assistant."})
         response = openai.ChatCompletion.create(
-          model=self.model_name,
-          messages=messages
+            model=self.model,
+            messages=messages,
+            max_tokens=150
         )
-        self.memory.store("assistant", response.choices[0].message['content'])
+
+        if memory is not None:
+            memory.remember(messages, response)
+        if long_term_memory is not None:
+            long_term_memory.remember(messages, response)
+
         return response.choices[0].message['content']
