@@ -6,21 +6,20 @@ class LLM:
     def __init__(self, model: str):
         self.model = model
 
-    def chat(self, messages: List[Dict[str, str]], memory: Optional[Memory] = None, long_term_memory: Optional[LongTermMemory] = None):
-        if memory is not None:
-            messages = memory.recall(messages)
+    def chat(self, messages: List[Dict[str, str]], long_term_memory: LongTermMemory = None) -> str:
+        if not messages:
+            messages = [{"role": "system", "content": "You are a helpful assistant."}]
         if long_term_memory is not None:
-            messages = long_term_memory.recall(messages)
-
+            long_term_memory_messages = long_term_memory.recall()
+            if long_term_memory_messages:
+                messages.extend(long_term_memory_messages)
+        print(f"Messages before API call: {messages}")
         response = openai.ChatCompletion.create(
             model=self.model,
             messages=messages,
             max_tokens=150
         )
-
-        if memory is not None:
-            memory.remember(messages, response)
-        if long_term_memory is not None:
-            long_term_memory.remember(messages, response)
-
+        print(f"Response from API: {response}")
         return response.choices[0].message['content']
+
+

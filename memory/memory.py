@@ -18,16 +18,18 @@ class Memory:
         if len(self.short_term_memory) > 5:
             self.short_term_memory.pop(0)
 
-    def recall(self, messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
-        return self.short_term_memory + messages
+    def recall(self) -> List[Dict[str, str]]:
+        print(f"Short term memory: {self.short_term_memory}")
+        return self.short_term_memory
 
 class LongTermMemory(Memory):
     def __init__(self):
         super().__init__()
         self.supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-    def recall(self, messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    def recall(self) -> List[Dict[str, str]]:
         result = self.supabase.table('documents').select().execute()
         if result.get('error') is None and result.get('data') is not None:
-            messages.extend(result.get('data'))
-        return messages
+            print(f"Long term memory: {result.get('data')}")
+            return result.get('data')
+        return []
